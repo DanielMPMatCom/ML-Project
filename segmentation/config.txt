@@ -1,0 +1,14 @@
+20.0
+1
+1
+1
+300
+
+
+--- LEGEND ---
+This configuration file contains the parameters required to process images and segment components. Below is the description of each field:
+    - k: (float) The tolerance level for similarity between pixel colors. Higher values allow more variation within a segment.
+    - use8Way: (boolean) Determines the connectivity type for flood fill. Set true for 8-way connectivity, false for 4-way connectivity.
+    - euclidif: (boolean) Specifies whether the Euclidean distance between colors is used as a similarity metric.
+    - adj: (boolean) Indicates if adjacency criteria should be applied for component grouping.
+    - minComponentSize: (integer) The minimum size (in pixels) required for a component to be saved, to keep only building blocks, heuristic.
