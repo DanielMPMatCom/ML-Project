@@ -27,6 +27,7 @@ struct Config {
     bool euclidif;
     bool adj;
     int minComponentSize;
+    double buildingBlockTreshold;
 };
 
 // Function to calculate color difference
@@ -99,7 +100,7 @@ Config readConfig(const std::string& configFile) {
         throw std::runtime_error("Could not open config file.");
     }
 
-    file >> config.k >> config.use8Way >> config.euclidif >> config.adj >> config.minComponentSize;
+    file >> config.k >> config.use8Way >> config.euclidif >> config.adj >> config.minComponentSize >> config.buildingBlockTreshold;
     file.close();
     return config;
 }
@@ -159,23 +160,51 @@ void saveMask(const std::vector<bool>& mask, int width, int height, const std::s
 
 void processImages(const std::string& inputDir, const std::string& outputDir, const Config& config) {
     std::vector<std::string> files = getFiles(inputDir);
-    std::cout << "Number of images to process: " << files.size() << "\n";
+    std::cout << "Number of files in the directory: " << files.size() << "\n";
 
-    for (size_t i = 0; i < files.size(); ++i) {
-        std::string filePath = files[i];
+    int i = -1;
+    for (const auto& filePath : files) {
+        std::cout << filePath <<"\n";
+        // Check if the file is an image based on its extension
+        if (filePath.size() >= 4 && filePath.substr(filePath.size() - 4) == ".hmp") continue;
+        i++;
+
+        // Load image data
         int width, height, channels;
         unsigned char* imgData = stbi_load(filePath.c_str(), &width, &height, &channels, 3);
         if (!imgData) {
-            std::cerr << "Error loading image: " << filePath << "\n";
+            std::cerr << "Failed to load image: " << filePath << "\n";
             continue;
         }
 
         std::cout << "Processing image " << i + 1 << ": " << filePath
                   << " (Width: " << width << ", Height: " << height << ", Channels: " << channels << ")\n";
 
+        // Derive the heatmap file path
+        std::string heatmapPath = filePath.substr(0, filePath.size() - 4) + ".hmp";
+
+        // Open and read the heatmap file
+        std::ifstream heatmapFile(heatmapPath, std::ios::binary);
+        if (!heatmapFile) {
+            std::cerr << "Failed to load heatmap file: " << heatmapPath << "\n";
+            stbi_image_free(imgData);
+            continue;
+        }
+
+        std::vector<float> heatmap(width * height);
+        heatmapFile.read(reinterpret_cast<char*>(heatmap.data()), width * height * sizeof(float));
+        if (!heatmapFile) {
+            std::cerr << "Error reading heatmap data from file: " << heatmapPath << "\n";
+            stbi_image_free(imgData);
+            continue;
+        }
+        heatmapFile.close();
+
         std::vector<Color> image(width * height);
+        std::vector<Color> buildingBlocksImage(width * height);
         for (int j = 0; j < width * height; ++j) {
             image[j] = {imgData[j * 3], imgData[j * 3 + 1], imgData[j * 3 + 2]};
+            buildingBlocksImage[j] = {255, 255, 255};
         }
         stbi_image_free(imgData);
 
@@ -183,6 +212,18 @@ void processImages(const std::string& inputDir, const std::string& outputDir, co
         folderPath << outputDir << "/" << std::setw(3) << std::setfill('0') << (i + 1);
         if (!createDirectory(folderPath.str())) {
             std::cerr << "Failed to create directory: " << folderPath.str() << "\n";
+            continue;
+        }
+        std::ostringstream buildingBlocksFolderPath;
+        buildingBlocksFolderPath << folderPath.str() << "/building_blocks";
+        if (!createDirectory(buildingBlocksFolderPath.str())) {
+            std::cerr << "Failed to create directory: " << buildingBlocksFolderPath.str() << "\n";
+            continue;
+        }
+        std::ostringstream nonBuildingBlocksFolderPath;
+        nonBuildingBlocksFolderPath << folderPath.str() << "/non_building_blocks";
+        if (!createDirectory(nonBuildingBlocksFolderPath.str())) {
+            std::cerr << "Failed to create directory: " << nonBuildingBlocksFolderPath.str() << "\n";
             continue;
         }
 
@@ -231,27 +272,53 @@ void processImages(const std::string& inputDir, const std::string& outputDir, co
                         continue;
                     }
 
+                    float heatmapThreshold = config.buildingBlockTreshold;
+
+                    // Inside the component processing loop
+                    float totalProbability = 0.0f;
+                    int pixelCount = 0;
+
                     // Save mask for the component
                     std::vector<bool> mask(componentWidth * componentHeight, false);
                     for (int cx = currentComponentXmin; cx <= currentComponentXmax; cx++) {
                         for (int cy = currentComponentYmin; cy <= currentComponentYmax; cy++) {
                             if (bigMask[cy * width + cx]) {
                                 mask[(cy - currentComponentYmin) * componentWidth + cx - currentComponentXmin] = true;
-                                bigMask[cy * width + cx] = false;
+                                totalProbability += heatmap[cy * width + cx];
+                                ++pixelCount;
                             }
                         }
                     }
 
-                    std::ostringstream maskPath;
-                    maskPath << folderPath.str() << "/component_" << std::setw(5) << std::setfill('0')
-                             << (componentCount + 1) << ".jpg";
-                    saveMask(mask, componentWidth, componentHeight, maskPath.str());
+
+                    float avgProbability = totalProbability / pixelCount;
+
+                    for (int cx = currentComponentXmin; cx <= currentComponentXmax; cx++) {
+                        for (int cy = currentComponentYmin; cy <= currentComponentYmax; cy++) {
+                            if (bigMask[cy * width + cx]) {
+                                bigMask[cy * width + cx] = false;
+                                if(avgProbability >= heatmapThreshold && currentComponentSize < width*height/4)
+                                    buildingBlocksImage[cy * width + cx] = {0,0,0};
+                            }
+                        }
+                    }
+
+                    // Save the component in the appropriate folder
+                    std::ostringstream targetPath;
+                    if (avgProbability >= heatmapThreshold) {
+                        targetPath << buildingBlocksFolderPath.str() << "/component_" << std::setw(5) << std::setfill('0') << (componentCount + 1) << ".jpg";
+                    } else {
+                        targetPath << nonBuildingBlocksFolderPath.str() << "/component_" << std::setw(5) << std::setfill('0') << (componentCount + 1) << ".jpg";
+                    }
+
+                    saveMask(mask, componentWidth, componentHeight, targetPath.str());
 
                     // Write component information to the file
                     componentInfoFile << "Component " << (componentCount + 1) << ":\n";
                     componentInfoFile << "  Top-left corner: (" << currentComponentXmin << ", " << currentComponentYmin << ")\n";
                     componentInfoFile << "  Width: " << componentWidth << "\n";
-                    componentInfoFile << "  Height: " << componentHeight << "\n\n";
+                    componentInfoFile << "  Height: " << componentHeight << "\n";
+                    componentInfoFile << "  Building block probability: " << avgProbability << "\n\n";
 
                     ++componentCount;
                     if(componentCount % 100 == 0) std::cout << componentCount << " processed components.\n";
@@ -269,6 +336,9 @@ void processImages(const std::string& inputDir, const std::string& outputDir, co
         std::ostringstream segPath;
         segPath << outputDir << "/output_" << std::setw(3) << std::setfill('0') << (i + 1) << ".jpg";
         saveSegmentation(image, width, height, segPath.str());
+        std::ostringstream buildingBlocksImagePath;
+        buildingBlocksImagePath << outputDir << "/building_blocks_" << std::setw(3) << std::setfill('0') << (i + 1) << ".jpg";
+        saveSegmentation(buildingBlocksImage, width, height, buildingBlocksImagePath.str());
 
         // Save segmentation in the folder as well
         std::ostringstream segFolderPath;
@@ -288,7 +358,8 @@ int main() {
                   << ", use8Way=" << config.use8Way
                   << ", euclidif=" << config.euclidif
                   << ", adj=" << config.adj
-                  << ", minComponentSize=" << config.minComponentSize << "\n";
+                  << ", minComponentSize=" << config.minComponentSize
+                  << ", buildingBlockTreshold=" << config.buildingBlockTreshold<< "\n";
 
         processImages("to_process", "processed", config);
     } catch (const std::exception& e) {

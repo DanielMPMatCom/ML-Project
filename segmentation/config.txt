@@ -2,7 +2,8 @@
 1
 1
 1
-300
+400
+0.4
 
 
 --- LEGEND ---
@@ -12,3 +13,4 @@ This configuration file contains the parameters required to process images and s
     - euclidif: (boolean) Specifies whether the Euclidean distance between colors is used as a similarity metric.
     - adj: (boolean) Indicates if adjacency criteria should be applied for component grouping.
     - minComponentSize: (integer) The minimum size (in pixels) required for a component to be saved, to keep only building blocks, heuristic.
+    - buildingBlockTreshold (float): The treshold for the average probability of being part of a building block, of each pixel in the component image, so it is considered a building block
