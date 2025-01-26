@@ -4,7 +4,9 @@
 
 - `dbscan.py`: Dado los polígonos se clusterizan para encontrar aquellos que son raros (equivalente en DBSCAN a los outliers).
 
-** Se está probando el modelo con los polígonos vectorizados. 
+- `metrics.py`: Funciones para calcular las métricas que se utilizarán como _features_ de los polígonos, que después serán utilizados como entrada del modelo DBSCAN.
+
+** Falta verificar la precisión de los polígonos outliers encontrados, con respecto a todos los polígonos existentes en cada imagen. 
 
 ## Georreferenciación
 

@@ -1,79 +1,62 @@
 import cv2
 import os
+import json
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import MinMaxScaler
 from scipy.stats import shapiro, kstest, norm, anderson
+from metrics import *
 
-def calculate_features(contour):
-    """
-    Calcula las características geométricas de un contorno.
+def process_shapes(json_data, output_csv):
+    with open(output_csv, mode='w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(['Name', 'Area', 'Perimeter', 'Aspect_Ratio', 'Compactness', 'Circularity', 'Top_Left_Corner'])
+
+        for shape_name, shape_data in json_data.items():
+            for shape in shape_data:
+                coordinates = shape['coordinates']
+                area = calculate_area(coordinates)
+                perimeter = calculate_perimeter(coordinates)
+                aspect_ratio = calculate_bounding_box_aspect_ratio(coordinates)
+                compactness = calculate_compactness(area, perimeter)
+                circularity = calculate_circularity(area, perimeter)
+                top_left_corner = shape['top_left_corner']
+
+                writer.writerow([shape_name, area, perimeter, aspect_ratio, compactness, circularity, top_left_corner])
+
+def draw_polygon(coordinates, output_path, shape_name):
+    # Crear una figura y un eje
+    fig, ax = plt.subplots()
     
-    Parámetros:
-        contour: np.ndarray - Contorno detectado en la imagen.
-        
-    Retorna:
-        list - Lista con las características calculadas.
-    """
-    area = cv2.contourArea(contour)
-    perimeter = cv2.arcLength(contour, True)
-    x, y, w, h = cv2.boundingRect(contour)
-    aspect_ratio = w / h if h != 0 else 0
-    compactness = area / (w * h) if w * h != 0 else 0
-    circularity = (4 * np.pi * area) / (perimeter ** 2) if perimeter > 0 else 0
-    return [area, perimeter, aspect_ratio, compactness, circularity]
-
-def extract_features_from_folder(folder_path, output_csv):
-    """
-    Procesa todas las imágenes en una carpeta, calcula sus features y las guarda en un CSV.
+    # Agregar el polígono al gráfico
+    polygon = Polygon(coordinates, closed=True, edgecolor='blue', facecolor='lightblue', linewidth=2)
+    ax.add_patch(polygon)
     
-    Parámetros:
-        folder_path: str - Ruta de la carpeta con imágenes.
-        output_csv: str - Ruta del archivo CSV donde se guardarán los resultados.
+    # Ajustar los límites del gráfico
+    x_coords = [point[0] for point in coordinates]
+    y_coords = [point[1] for point in coordinates]
+    ax.set_xlim(min(x_coords) - 10, max(x_coords) + 10)
+    ax.set_ylim(min(y_coords) - 10, max(y_coords) + 10)
+    ax.set_aspect('equal', adjustable='datalim')
+    
+    # Quitar ejes para que sea solo la figura
+    ax.axis('off')
+    
+    # Guardar la figura como imagen
+    output_file = os.path.join(output_path, f"{shape_name}.png")
+    plt.savefig(output_file, bbox_inches='tight', pad_inches=0)
+    plt.close(fig)
+
+def detect_outliers_with_dbscan(csv_path, output_folder, json_data, eps=0.5, min_samples=5):
     """
-    # Lista para almacenar los resultados
-    data = []
-
-    # Recorrer todas las imágenes en la carpeta
-    for filename in os.listdir(folder_path):
-        if filename.lower().endswith(('.jpg', '.png')):
-            # Leer la imagen
-            image_path = os.path.join(folder_path, filename)
-            image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-
-            # Verificar que la imagen se cargó correctamente
-            if image is None:
-                print(f"No se pudo cargar la imagen: {filename}")
-                continue
-
-            # Binarizar la imagen
-            _, binary = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
-
-            # Encontrar contornos
-            contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-            # Calcular features para cada contorno
-            for contour in contours:
-                features = calculate_features(contour)
-                data.append([filename] + features)
-
-    # Crear un DataFrame de los resultados
-    columns = ["filename", "area", "perimeter", "aspect_ratio", "compactness", "circularity"]
-    df = pd.DataFrame(data, columns=columns)
-
-    # Guardar en un archivo CSV
-    df.to_csv(output_csv, index=False)
-    print(f"Features guardados en: {output_csv}")
-
-def detect_outliers_with_dbscan(csv_path, output_folder, images_folder_path, eps=0.5, min_samples=5):
-    """
-    Detecta outliers en las imágenes basándose en DBSCAN y guarda las imágenes identificadas como outliers en una carpeta.
+    Detecta outliers en los polígonos basándose en DBSCAN y guarda los polígonos identificados como outliers en una carpeta.
 
     Parámetros:
         csv_path: str - Ruta del archivo CSV con los features.
-        output_folder: str - Carpeta donde se guardarán las imágenes outliers.
-        images_folder_path: str - Carpeta donde se encuentran las imagenes.
+        output_folder: str - Carpeta donde se guardarán los polígonos outliers.
         eps: float - Máxima distancia entre dos muestras para que se consideren en el mismo vecindario.
         min_samples: int - Número mínimo de muestras para formar un clúster.
     """
@@ -81,8 +64,8 @@ def detect_outliers_with_dbscan(csv_path, output_folder, images_folder_path, eps
     df = pd.read_csv(csv_path)
 
     # Separar los nombres de archivo y los features
-    filenames = df['filename']
-    features = df.drop(columns=['filename']).values
+    filenames = df['Name']
+    features = df.drop(columns=['Name', 'Top_Left_Corner']).values
 
     # Normalizacion de los datos
     scaler = MinMaxScaler()
@@ -95,26 +78,27 @@ def detect_outliers_with_dbscan(csv_path, output_folder, images_folder_path, eps
     # Identificar outliers (label == -1)
     outlier_indices = np.where(labels == -1)[0]
     outlier_filenames = filenames.iloc[outlier_indices]
+    outlier_filenames_list = outlier_filenames.tolist()
 
     # Crear carpeta de outliers si no existe
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    # Copiar las imágenes outliers a la carpeta
-    for filename in outlier_filenames:
-        source_path = os.path.join(images_folder_path, filename)
-        destination_path = os.path.join(output_folder, filename)
-        if os.path.exists(source_path):
-            cv2.imwrite(destination_path, cv2.imread(source_path))
+    # Guardar los polígonos outliers como imágenes a la carpeta
+    outlier_names = [outlier[1] for outlier in outlier_filenames]
+    for shape_name, shape_data in json_data.items():
+        if shape_name in outlier_filenames_list:
+            for idx, shape in enumerate(shape_data):
+                coordinates = shape['coordinates']
+                draw_polygon(coordinates, output_folder, shape_name)
 
-    print(f"Nombres de las imágenes outliers: {list(outlier_filenames)}")
     print(f"Se encontraron {len(outlier_indices)} imágenes outliers.")
 
 def verifying_normal_distribution(csv_path):
 
     # Cargar el archivo CSV
     df = pd.read_csv(csv_path)
-    df = df.iloc[:, 1:] 
+    df = df.drop(columns=['Name', 'Top_Left_Corner']).values
 
     print('\n-------------------')
     # Prueba de Shapiro-Wilk
@@ -147,18 +131,23 @@ def verifying_normal_distribution(csv_path):
 
 if __name__ == '__main__':
     
-    # Ruta de la carpeta con imágenes
-    folder_path = "images"
+    # Ruta al archivo JSON
+    json_path = "json/002_grouped_shapefiles_rdp.json"
     # Ruta del archivo CSV de salida
-    output_csv = "features_output.csv"
+    features_csv = "features.csv"
     # Carpeta para guardar outliers
     outliers_folder = "outliers"
-    
+
+    # Load JSON data
+    with open(json_path, 'r') as file:
+        json_data = json.load(file)
+
     # Extraer features y guardar en CSV
-    extract_features_from_folder(folder_path, output_csv)
+    process_shapes(json_data, features_csv)
+    print(f"Features successfully saved to {features_csv}.")
     
     # Detectar outliers usando DBSCAN
-    detect_outliers_with_dbscan(output_csv, outliers_folder, images_folder_path = folder_path, eps=0.3, min_samples=5)
+    detect_outliers_with_dbscan(features_csv, outliers_folder, json_data, eps=0.3, min_samples=5)
 
     # Comprobando si los datos tienen una distribucion normal
-    # verifying_normal_distribution(output_csv)
+    # verifying_normal_distribution(features_csv)
