@@ -1,5 +1,9 @@
 fiona==1.10.1
+matplotlib==3.7.4
 numpy==1.24.4
 opencv_python==4.8.1.78
 osgeo==0.0.1
+Pillow==11.1.0
 Shapely==2.0.6
+torch==2.1.0
+torchvision==0.16.0
