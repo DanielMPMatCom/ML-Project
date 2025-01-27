@@ -1,7 +1,8 @@
-data
 new_data
+data_habana
+data
 *ipynb
-*.ipynb
-data*
 habana*
 .gitignore
+*.txt
+dataset_*
