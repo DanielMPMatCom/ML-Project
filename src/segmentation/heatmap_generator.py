@@ -7,7 +7,7 @@ import matplotlib.cm as cm
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from torchvision import transforms
-from .train import BorderDetectionCNN
+from train import BorderDetectionCNN
 
 def generate_heatmap(
     image_path: str,
@@ -127,3 +127,6 @@ def generate_heatmap(
     print(f"Heatmap guardado en: {output_filename}")
 
     return heatmap_normalized
+
+if __name__=='__main__':
+    gradcam_map = generate_heatmap("../../habana.jpg")
