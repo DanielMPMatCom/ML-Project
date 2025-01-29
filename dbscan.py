@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from sklearn.cluster import DBSCAN
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from scipy.stats import shapiro, kstest, norm, anderson
 from metrics import calculate_area, calculate_circularity, calculate_compactness, calculate_perimeter, convexity_measure, side_length_variation, side_length_variance
 
@@ -30,6 +30,19 @@ def process_shapes(json_data, output_csv):
                 top_left_corner = shape['top_left_corner']
 
                 writer.writerow([shape_name, num_sides, area, perimeter, circularity, compactness, convexity, cv, top_left_corner])
+
+def verifying_normal_distribution(csv_path):
+
+    # Cargar el archivo CSV
+    df = pd.read_csv(csv_path)
+    df = df.drop(columns=['Name', 'Top_Left_Corner']).values
+
+    # Prueba de Shapiro-Wilk
+    stat, p = shapiro(df)
+    if p > 0.05:
+        return True
+    else:
+        return False
 
 def draw_polygon(coordinates, output_path, shape_name):
     # Crear una figura y un eje
@@ -54,30 +67,31 @@ def draw_polygon(coordinates, output_path, shape_name):
     plt.savefig(output_file, bbox_inches='tight', pad_inches=0)
     plt.close(fig)
 
-def detect_outliers_with_dbscan(csv_path, output_folder, json_data, eps=0.5, min_samples=5):
+def detect_outliers_with_dbscan(csv_path, output_path, json_data, eps=0.5, min_samples=5):
     """
     Detecta outliers en los polígonos basándose en DBSCAN y guarda los polígonos identificados como outliers en una carpeta.
 
     Parámetros:
         csv_path: str - Ruta del archivo CSV con los features.
-        output_folder: str - Carpeta donde se guardarán los polígonos outliers.
+        output_path: str - Carpeta donde se guardarán los polígonos outliers.
         eps: float - Máxima distancia entre dos muestras para que se consideren en el mismo vecindario.
         min_samples: int - Número mínimo de muestras para formar un clúster.
     """
     # Cargar el archivo CSV
     df = pd.read_csv(csv_path)
 
-    # Separar los nombres de archivo y los features
-    filenames = df['Name']
-    # features_list_name = []
-    # for row in df.itertuples():
-    #     if row.Convexity < 0.8:
-    #         features_list_name.append(row.Name)
+    # Separar los nombres de los polígonos y los features
+    polygon_names = df['Name']
     features = df.drop(columns=['Name', 'Top_Left_Corner', 'Area', 'Perimeter']).values
 
-    # Normalizacion de los datos
-    scaler = MinMaxScaler()
-    features = scaler.fit_transform(features)
+    if verifying_normal_distribution(csv_path):
+        # Estandarización de los datos
+        scaler = StandardScaler()
+        features = scaler.fit_transform(features)
+    else:
+        # Normalización de los datos
+        scaler = MinMaxScaler()
+        features = scaler.fit_transform(features)
 
     # Aplicar DBSCAN
     dbscan = DBSCAN(eps=eps, min_samples=min_samples)
@@ -85,84 +99,32 @@ def detect_outliers_with_dbscan(csv_path, output_folder, json_data, eps=0.5, min
 
     # Identificar outliers (label == -1)
     outlier_indices = np.where(labels == -1)[0]
-    outlier_filenames = filenames.iloc[outlier_indices]
-    outlier_filenames_list = outlier_filenames.tolist()
+    outlier_polygon_names = polygon_names.iloc[outlier_indices]
+    outlier_polygon_names_list = outlier_polygon_names.tolist()
 
     # Crear carpeta de outliers si no existe
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-
-    # (Esto es no va)
-    # Dibujar los poligonos con menos de 0.80 de relacion
-    # for shape_name, shape_data in json_data.items():
-    #     if shape_name in features_list_name:
-    #         for shape in shape_data:
-    #             coordinates = shape['coordinates']
-    #             draw_polygon(coordinates, output_folder, shape_name)
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
 
     # Guardar los polígonos outliers como imágenes a la carpeta
     for shape_name, shape_data in json_data.items():
-        if shape_name in outlier_filenames_list:
+        if shape_name in outlier_polygon_names_list:
             for shape in shape_data:
                 coordinates = shape['coordinates']
-                draw_polygon(coordinates, output_folder, shape_name)
+                draw_polygon(coordinates, output_path, shape_name)
 
-    print(f"Se encontraron {len(outlier_indices)} imágenes outliers.")
+    # Guardar los outliers_filename en un archivo JSON
+    with open(f"{output_path}/outliers_polygon_names.json", "w", encoding="utf-8") as file:
+        json.dump(outlier_polygon_names_list, file, indent=4)
 
-def verifying_normal_distribution(csv_path):
-
-    # Cargar el archivo CSV
-    df = pd.read_csv(csv_path)
-    df = df.drop(columns=['Name', 'Top_Left_Corner']).values
-
-    print('\n-------------------')
-    # Prueba de Shapiro-Wilk
-    stat, p = shapiro(df)
-    print(f"Estadístico: {stat}, p-valor: {p}")
-    if p > 0.05:
-        print("Los datos parecen seguir una distribución normal.")
-    else:
-        print("Los datos NO siguen una distribución normal.")
-
-    print('\n-------------------')
-    # Prueba de Kolmogorov-Smirnov
-    stat, p = kstest(df, "norm", args=(df.mean(), df.std()))
-    print(f"Estadístico: {stat}, p-valor: {p}")
-    if p > 0.05:
-        print("Los datos parecen seguir una distribución normal.")
-    else:
-        print("Los datos NO siguen una distribución normal.")
-
-    print('\n-------------------')
-    # Prueba de Anderson
-    result = anderson(df, dist='norm')
-    print(f"Estadístico: {result.statistic}")
-    print("Valores críticos:", result.critical_values)
-    if result.statistic < result.critical_values[2]:  # Generalmente usamos el nivel de significancia del 5%
-        print("Los datos parecen seguir una distribución normal.")
-    else:
-        print("Los datos NO siguen una distribución normal.")
-
-
-if __name__ == '__main__':
-    
-    # Ruta al archivo JSON
-    json_path = "json/001_grouped_shapefiles_rdp.json"
-    # Ruta del archivo CSV de salida
+def clustering_polygons(json_path, output_path):
+    # Ruta para guardar los features de los polígonos en CSV
     features_csv = "features.csv"
-    # Carpeta para guardar outliers
-    outliers_folder = "outliers"
-
-    # Load JSON data
+    # Cargar los datos del JSON
     with open(json_path, 'r') as file:
         json_data = json.load(file)
 
     # Extraer features y guardar en CSV
     process_shapes(json_data, features_csv)
-    print(f"Features successfully saved to {features_csv}.")
-    
     # Detectar outliers usando DBSCAN
-    detect_outliers_with_dbscan(features_csv, outliers_folder, json_data, eps=0.3, min_samples=5)
-
-    # Comprobando si los datos tienen una distribucion normal
-    # verifying_normal_distribution(features_csv)
+    detect_outliers_with_dbscan(features_csv, output_path, json_data, eps=0.3, min_samples=5)

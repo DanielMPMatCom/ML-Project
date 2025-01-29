@@ -1,6 +1,8 @@
 images
 json
 prueba.py
+prueba1.py
+dbscan_para_mejorar.py
 __pycache__
 *csv
 outliers

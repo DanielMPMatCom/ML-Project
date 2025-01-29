@@ -1,70 +1,75 @@
 import cv2
+import json
+import os
 import numpy as np
-import rasterio
-from rasterio.transform import from_bounds
 import folium
 from folium.raster_layers import ImageOverlay
 from PIL import Image
 
-# Puntos de control
-x1 = [5044, 2284, 23.143211, -82.378658]  # Infanta y 23 (La primera de abajo))
-x2 = [344, 2276, 23.140061, -82.350725] # Esquina de Mercaderes y O'Reilly (La primera de abajo)
-x3 = [2268, 3524, 23.129823, -82.351820] # Esquina de Compostela y San Isidro (La segunda de abajo)
-x4 = [2480, 892, 23.124520, -82.374515] # Esquina de Infanta y Santa Marta (La segunda de arriba)
+def georeferencing(json_path, image_path, output_path):
 
+    # Cargar los datos del JSON
+    with open(json_path, 'r') as file:
+        json_data = json.load(file)
 
-# Puntos de control: (x, y) en la imagen y (lat, lon) en el mapa
-image_points = np.array([
-    [x1[0], x1[1]],
-    [x2[0], x2[1]],
-    [x3[0], x3[1]],
-    [x4[0], x4[1]]  # Añade tantos puntos como tengas
-], dtype="float64")
+    # Arrays para guardar las coordenadas de los puntos de control
+    image_points = np.empty((len(json_data), 2), dtype="float64")
+    geo_points = np.empty((len(json_data), 2), dtype="float64")
 
-geo_points = np.array([
-    [x1[3], x1[2]],
-    [x2[3], x2[2]],
-    [x3[3], x3[2]],
-    [x4[3], x4[2]]  # Asegúrate de que coincidan con image_points
-], dtype="float64")
+    for control_point in json_data:
+        new_point = np.array([[control_point[0], control_point[1]]]) 
+        image_points = np.vstack((image_points, new_point))
+        new_point = np.array([[control_point[3], control_point[2]]]) 
+        geo_points = np.vstack((geo_points, new_point))
 
-# Calcular la transformación (homografía)
-transform_matrix, _ = cv2.findHomography(image_points, geo_points, method=cv2.RANSAC)
+    # Calcular la transformación (homografía)
+    transform_matrix, _ = cv2.findHomography(image_points, geo_points, method=cv2.RANSAC)
 
-# Leer la imagen original
-image = cv2.imread("habana.png")  
-height, width, _ = image.shape
+    # Convertir la imagen a .jpg
+    img = Image.open(image_path)    
+    img = img.convert("RGB")  # Elimina la transparencia (convierte a fondo blanco)
+    image_path_jpg = os.path.splitext(image_path)[0] + ".jpg" # Cambia la extensión a .jpg manteniendo el mismo nombre de archivo
+    img.save(image_path_jpg) # Guarda la imagen como JPG
 
-# Transformar la imagen al sistema geográfico
-geo_image = cv2.warpPerspective(image, transform_matrix, (width, height))
+    # Cargar la imagen
+    image = cv2.imread(image_path_jpg)  
+    height, width, _ = image.shape
 
-# Guardar la imagen georreferenciada
-cv2.imwrite("geo_image.png", geo_image)
+    # Definir las esquinas de la imagen original (píxeles)
+    corners = np.array([[0, 0], [0, height-1], [width-1, 0], [width-1, height-1]], dtype="float64")
 
-# Definir los límites geográficos
-min_lon, max_lon = float(min(geo_points[:, 0])), float(max(geo_points[:, 0]))
-min_lat, max_lat = float(min(geo_points[:, 1])), float(max(geo_points[:, 1]))
+    # Transformar las esquinas de la imagen a coordenadas geográficas
+    geo_corners = cv2.perspectiveTransform(np.array([corners]), transform_matrix)[0]
 
-# Coordenadas aproximadas del bounding box de la imagen transformada
-bounds = [
-    [min_lat, min_lon],  # Coordenada superior izquierda
-    [max_lat, max_lon]   # Coordenada inferior derecha
-]
+    # Obtener las coordenadas geográficas de las 4 esquinas transformadas
+    top_left = geo_corners[0]
+    bottom_left = geo_corners[1]
+    top_right = geo_corners[2]
+    bottom_right = geo_corners[3]
 
-# Crear el mapa centrado en la imagen
-m = folium.Map(location=[(min_lat + max_lat) / 2, (min_lon + max_lon) / 2], zoom_start=16)
+    # Coordenadas de los 4 puntos límites de la imagen transformada (como bounds)
+    bounds = [
+        [top_left[1], top_left[0]],  # Coordenada superior izquierda
+        [bottom_right[1], bottom_right[0]]  # Coordenada inferior derecha
+    ]
 
-# Superponer la imagen transformada en el mapa
-image_overlay = ImageOverlay(
-    name="Georeferenced Image",
-    image="geo_image.png",  # Imagen transformada
-    bounds=bounds,
-    opacity=0.6
-)
-image_overlay.add_to(m)
+    # Crear el mapa centrado en la imagen
+    m = folium.Map(location=[(top_left[1] + bottom_right[1]) / 2, (top_left[0] + bottom_right[0]) / 2], zoom_start=16)
 
-# Añadir controles
-folium.LayerControl().add_to(m)
+    # Superponer la imagen transformada en el mapa
+    image_overlay = ImageOverlay(
+        name="Georeferenced Image",
+        image=image_path_jpg,  
+        bounds=bounds,
+        opacity=0.6
+    )
+    image_overlay.add_to(m)
 
-# Guardar y mostrar el mapa
-m.save("georeferenced_map.html")
+    # Añadir controles
+    folium.LayerControl().add_to(m)
+
+    # Guardar y mostrar el mapa
+    m.save(output_path)
+
+georeferencing('json/control_points.json', 'images/habana.png', 'georeferenced_map.html')
+
