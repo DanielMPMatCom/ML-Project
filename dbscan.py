@@ -1,6 +1,8 @@
 import cv2
 import os
 import json
+import csv
+import math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -8,24 +10,26 @@ from matplotlib.patches import Polygon
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import MinMaxScaler
 from scipy.stats import shapiro, kstest, norm, anderson
-from metrics import *
+from metrics import calculate_area, calculate_circularity, calculate_compactness, calculate_perimeter, convexity_measure, side_length_variation, side_length_variance
 
 def process_shapes(json_data, output_csv):
     with open(output_csv, mode='w', newline='') as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerow(['Name', 'Area', 'Perimeter', 'Aspect_Ratio', 'Compactness', 'Circularity', 'Top_Left_Corner'])
+        writer.writerow(['Name', 'Num_Sides', 'Area', 'Perimeter', 'Circularity', 'Compactness', 'Convexity', 'CV', 'Top_Left_Corner'])
 
         for shape_name, shape_data in json_data.items():
             for shape in shape_data:
                 coordinates = shape['coordinates']
+                num_sides = len(coordinates)
                 area = calculate_area(coordinates)
                 perimeter = calculate_perimeter(coordinates)
-                aspect_ratio = calculate_bounding_box_aspect_ratio(coordinates)
                 compactness = calculate_compactness(area, perimeter)
                 circularity = calculate_circularity(area, perimeter)
+                convexity = convexity_measure(coordinates)
+                cv = side_length_variation(coordinates)
                 top_left_corner = shape['top_left_corner']
 
-                writer.writerow([shape_name, area, perimeter, aspect_ratio, compactness, circularity, top_left_corner])
+                writer.writerow([shape_name, num_sides, area, perimeter, circularity, compactness, convexity, cv, top_left_corner])
 
 def draw_polygon(coordinates, output_path, shape_name):
     # Crear una figura y un eje
@@ -65,7 +69,11 @@ def detect_outliers_with_dbscan(csv_path, output_folder, json_data, eps=0.5, min
 
     # Separar los nombres de archivo y los features
     filenames = df['Name']
-    features = df.drop(columns=['Name', 'Top_Left_Corner']).values
+    # features_list_name = []
+    # for row in df.itertuples():
+    #     if row.Convexity < 0.8:
+    #         features_list_name.append(row.Name)
+    features = df.drop(columns=['Name', 'Top_Left_Corner', 'Area', 'Perimeter']).values
 
     # Normalizacion de los datos
     scaler = MinMaxScaler()
@@ -84,11 +92,18 @@ def detect_outliers_with_dbscan(csv_path, output_folder, json_data, eps=0.5, min
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
+    # (Esto es no va)
+    # Dibujar los poligonos con menos de 0.80 de relacion
+    # for shape_name, shape_data in json_data.items():
+    #     if shape_name in features_list_name:
+    #         for shape in shape_data:
+    #             coordinates = shape['coordinates']
+    #             draw_polygon(coordinates, output_folder, shape_name)
+
     # Guardar los polígonos outliers como imágenes a la carpeta
-    outlier_names = [outlier[1] for outlier in outlier_filenames]
     for shape_name, shape_data in json_data.items():
         if shape_name in outlier_filenames_list:
-            for idx, shape in enumerate(shape_data):
+            for shape in shape_data:
                 coordinates = shape['coordinates']
                 draw_polygon(coordinates, output_folder, shape_name)
 
@@ -132,7 +147,7 @@ def verifying_normal_distribution(csv_path):
 if __name__ == '__main__':
     
     # Ruta al archivo JSON
-    json_path = "json/002_grouped_shapefiles_rdp.json"
+    json_path = "json/001_grouped_shapefiles_rdp.json"
     # Ruta del archivo CSV de salida
     features_csv = "features.csv"
     # Carpeta para guardar outliers

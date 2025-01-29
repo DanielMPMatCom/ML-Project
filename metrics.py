@@ -1,6 +1,7 @@
 import json
 import csv
 import math
+from shapely.geometry import Polygon
 
 def calculate_area(coordinates):
     n = len(coordinates)
@@ -30,3 +31,45 @@ def calculate_circularity(area, perimeter):
     if perimeter == 0:
         return 0  # Avoid division by zero
     return (4 * math.pi * area) / (perimeter ** 2)
+
+def convexity_measure(coords):
+    poly = Polygon(coords)
+    convex_hull = poly.convex_hull
+    return poly.area / convex_hull.area if convex_hull.area != 0 else 0
+
+def calculate_polygon_sides(polygon_coords):
+    # Calcular las longitudes de los lados
+    side_lengths = []
+    for i in range(len(polygon_coords)):
+        x1, y1 = polygon_coords[i]
+        x2, y2 = polygon_coords[(i + 1) % len(polygon_coords)]
+        length = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+        side_lengths.append(length)
+
+    return side_lengths
+
+def side_length_variation(polygon_coords):
+    # Calcular las longitudes de los lados
+    side_lengths = calculate_polygon_sides(polygon_coords)
+    
+    # Calcular la media y la desviación estándar de las longitudes
+    mean_length = sum(side_lengths) / len(side_lengths)
+    std_dev = math.sqrt(sum((length - mean_length) ** 2 for length in side_lengths) / len(side_lengths))
+    
+    # Calcular el coeficiente de variación (CV)
+    cv = std_dev / mean_length
+    
+    return cv
+
+def side_length_variance(polygon_coords):
+    #  Calcular las longitudes de los lados
+    side_lengths = calculate_polygon_sides(polygon_coords)
+
+    # Calcular la media de las longitudes
+    mean_length = sum(side_lengths) / len(side_lengths)
+    
+    # Calcular la varianza
+    variance = sum((length - mean_length) ** 2 for length in side_lengths) / len(side_lengths)
+    
+    return variance
+

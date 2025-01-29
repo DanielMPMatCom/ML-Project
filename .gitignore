@@ -4,3 +4,5 @@ prueba.py
 __pycache__
 *csv
 outliers
+outliers_shapefiles_1
+outliers_shapefiles_2
