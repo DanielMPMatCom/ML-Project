@@ -18,27 +18,6 @@ def scale_polygon_to_area_one(poly: Polygon) -> Polygon:
     poly_escalado = scale(poly, xfact=s, yfact=s, origin=(centroid.x, centroid.y))
     return poly_escalado
 
-def longest_side_index(poly: Polygon) -> int:
-    """
-    Retorna el índice del vértice que inicia el lado más largo de un polígono.
-    Suponemos que poly.exterior.coords forma un anillo cerrado,
-    es decir, el último punto es igual al primero.
-    """
-    coords = list(poly.exterior.coords)  # anillo cerrado
-    n = len(coords) - 1  # el último repite al primero
-    
-    max_length = -1
-    max_idx = 0
-    
-    for i in range(n):
-        x1, y1 = coords[i]
-        x2, y2 = coords[(i + 1) % n]
-        length = math.hypot(x2 - x1, y2 - y1)
-        if length > max_length:
-            max_length = length
-            max_idx = i
-    return max_idx
-
 def align_polygon_on_side(poly: Polygon, side_index: int) -> Polygon:
     """
     Alinea el polígono de forma que:
@@ -85,60 +64,7 @@ def polygon_iou(polyA: Polygon, polyB: Polygon) -> float:
         return 0.0
     return inter / union
 
-def topological_similarity(
-    coordsA, 
-    coordsB, 
-    threshold=0.9
-) -> bool:
-    """
-    Implementa el algoritmo propuesto para verificar si dos polígonos son
-    'topológicamente iguales' por encima de un cierto umbral (threshold)
-    usando el IoU máximo como criterio.
-    
-    Parámetros:
-    - coordsA: Lista de tuplas (x, y) del polígono A en sentido clockwise.
-    - coordsB: Lista de tuplas (x, y) del polígono B en sentido clockwise.
-    - threshold: Valor mínimo de IoU para considerar que A y B son 'similares'.
-    
-    Retorna:
-    - True si el IoU máximo entre A y B supera el threshold, False en caso contrario.
-    """
-    # 0. Encontrar polígono con menor cantidad de lados
-    if len(coordsA) > len(coordsB):
-        coordsA, coordsB = coordsB, coordsA
-
-    # 1. Convertir a polígonos Shapely
-    polyA = Polygon(coordsA)
-    polyB = Polygon(coordsB)
-    
-    # 2. Escalar a área 1
-    polyA = scale_polygon_to_area_one(polyA)
-    polyB = scale_polygon_to_area_one(polyB)
-    
-    # 3. Alinear el polígono B en base a su lado más largo
-    idx_longest_B = longest_side_index(polyB)
-    polyB_aligned = align_polygon_on_side(polyB, idx_longest_B)
-    
-    # 4. Para cada lado L de A, alineamos A y calculamos IoU con el B ya alineado
-    coordsA_aligned = list(polyA.exterior.coords)
-    nA = len(coordsA_aligned) - 1  # polígono cerrado, último = primero
-    
-    max_iou = 0.0
-    for i in range(nA):
-        # Alinear polígono A al lado i
-        polyA_aligned = align_polygon_on_side(polyA, i)
-        
-        # Calcular IoU con B (ya alineado)
-        current_iou = polygon_iou(polyA_aligned, polyB_aligned)
-        
-        if current_iou > max_iou:
-            max_iou = current_iou
-    
-    # 5. Comparar el máximo IoU encontrado con el threshold
-    print(f"Máximo IoU calculado: {max_iou:.8f}")
-    return max_iou >= threshold
-
-def topological_similarity__(coordsA, coordsB, threshold=0.9) -> bool:
+def topological_similarity(coordsA, coordsB, threshold=0.9) -> bool:
     """
     Verifica si dos polígonos son 'topológicamente iguales' por encima
     de un cierto umbral (threshold), usando el IoU máximo entre
@@ -190,7 +116,6 @@ if __name__ == "__main__":
     # El polígono B tiene la misma forma que A, solo que más grande
     square_B = [(2,2.105), (2.027,-2), (-2.0177,-2.21), (-2,2.121)]
     
-    # Debería dar True con un threshold razonable (por ejemplo 0.7)
-    is_similar = topological_similarity__(square_A, square_B, threshold=0.9)
+    # Debería dar True con un threshold razonable (por ejemplo 0.7) 
     is_similar = topological_similarity(square_A, square_B, threshold=0.9)
     print("¿Son topológicamente iguales?", is_similar)
