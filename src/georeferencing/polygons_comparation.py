@@ -85,8 +85,6 @@ def polygon_iou(polyA: Polygon, polyB: Polygon) -> float:
         return 0.0
     return inter / union
 
-
-
 def topological_similarity(
     coordsA, 
     coordsB, 
