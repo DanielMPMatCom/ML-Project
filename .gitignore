@@ -7,3 +7,5 @@ habana*
 *.txt
 dataset_*
 cache
+__pycache__
+src/segmentation/model.pth

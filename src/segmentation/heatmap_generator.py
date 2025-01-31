@@ -1,16 +1,78 @@
+import torch
+import torch.nn.functional as F
+from torchvision import transforms
+import torch.nn as nn
+
 import os
 import cv2
-import torch
 import numpy as np
 from PIL import Image
 import matplotlib.cm as cm
-import torch.nn.functional as F
+
 import matplotlib.pyplot as plt
-from torchvision import transforms
-from train import BorderDetectionCNN
+
+class BorderDetectionCNN(nn.Module):
+    def __init__(self, num_classes=2):
+        super(BorderDetectionCNN, self).__init__()
+        
+        # Capas convolucionales
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+        self.conv3 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
+        self.conv4 = nn.Conv2d(128, 256, kernel_size=3, padding=1)
+        
+        # BatchNorm
+        self.bn1 = nn.BatchNorm2d(32)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.bn3 = nn.BatchNorm2d(128)
+        self.bn4 = nn.BatchNorm2d(256)
+        
+        # Dropout para regularización
+        self.dropout = nn.Dropout(0.5)
+        
+        # MaxPool 2x2
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+        
+        # Clasificador final
+        # 224 -> 112 -> 56 -> 28 -> 14 (reducción cada pool)
+        self.fc1 = nn.Linear(256 * 14 * 14, 512)
+        self.fc2 = nn.Linear(512, num_classes)
+        
+        self.relu = nn.ReLU()
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.pool(x)
+
+        x = self.conv2(x)
+        x = self.bn2(x)
+        x = self.relu(x)
+        x = self.pool(x)
+
+        x = self.conv3(x)
+        x = self.bn3(x)
+        x = self.relu(x)
+        x = self.pool(x)
+
+        x = self.conv4(x)
+        x = self.bn4(x)
+        x = self.relu(x)
+        x = self.pool(x)
+
+        x = x.view(x.size(0), -1)  # Flatten
+
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.dropout(x)
+        x = self.fc2(x)
+        return x
+
 
 def generate_heatmap(
     image_path: str,
+    output_path="heatmaps",
     model_path: str = "model.pth"
 ) -> np.ndarray:
     """
@@ -40,7 +102,7 @@ def generate_heatmap(
     height, width, _ = img_array.shape
 
     # Define window size and step size for sliding window
-    WINDOW_SIZE = height // 100
+    WINDOW_SIZE = height // 30
     if WINDOW_SIZE < 2:
         WINDOW_SIZE = 2
 
@@ -96,7 +158,7 @@ def generate_heatmap(
     overlay = cv2.addWeighted(base_img_bgr, 1.0 - alpha, heatmap_color, alpha, 0)
     
 
-    hmp_output_dir = "heatmaps"
+    hmp_output_dir = output_path
 
     base_name, _ = os.path.splitext(os.path.basename(image_path))
     output_filename = os.path.join(hmp_output_dir, f"{base_name}.png")
@@ -114,7 +176,6 @@ def generate_heatmap(
     return heatmap_normalized
 
 if __name__ == '__main__':
-    model_path = "model.pth"
     
     input_folder = "../label_extraction/labelless_data/"
     output_heatmaps_dir = "heatmaps"
@@ -126,6 +187,6 @@ if __name__ == '__main__':
             image_path = os.path.join(input_folder, filename)
             print(f"Processing: {filename}")
             try:
-                generate_heatmap(image_path, model_path)
+                generate_heatmap(image_path)
             except Exception as e:
                 print(f"Error processing {filename}: {str(e)}")

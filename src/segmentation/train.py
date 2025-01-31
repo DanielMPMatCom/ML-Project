@@ -221,7 +221,6 @@ def main():
     # -- Inicializar listas para graficar
     train_losses, val_losses = [], []
     train_accuracies, val_accuracies = [], []
-    
 
     def train_one_epoch(epoch):
         model.train()
@@ -246,7 +245,6 @@ def main():
             if (i + 1) % 10 == 0:
                 print(f'  Época [{epoch+1}/{EPOCHS}], Batch [{i+1}/{len(train_loader)}], '
                       f'Loss: {loss.item():.4f}')
-        
         epoch_loss = running_loss / len(train_loader)
         epoch_acc = 100.0 * correct / total
         return epoch_loss, epoch_acc
@@ -267,7 +265,6 @@ def main():
                 _, predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
-        
         val_loss = running_loss / len(val_loader)
         val_acc = 100.0 * correct / total
         return val_loss, val_acc
@@ -302,6 +299,26 @@ def main():
     total_time = time.time() - start_time
     print(f"Entrenamiento finalizado en {total_time:.2f} segundos.")
     print(f"Mejor modelo guardado como 'model.pth'")
+    
+
+    # Añadir gráficos de entrenamiento y validación
+    plt.figure(figsize=(12, 6))
+    plt.plot(train_losses, label='Train Loss')
+    plt.plot(val_losses, label='Val Loss')
+    plt.title('Loss Curves')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.show()
+
+    plt.figure(figsize=(12,6))
+    plt.plot(train_accuracies, label='Train Acc')
+    plt.plot(val_accuracies, label='Val Acc')
+    plt.title('Accuracy Curves')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.show()
 
 
 if __name__ == "__main__":
