@@ -1,0 +1,34 @@
+\babel@toc {english}{}
+\contentsline {section}{\numberline {1}Introducción}{2}{section.1}%
+\contentsline {section}{\numberline {2}Preprocesamiento de Imágenes}{2}{section.2}%
+\contentsline {section}{\numberline {3}Extracción y Eliminación de Etiquetas (\textit {Labels })}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Detección de Texto con PP-OCR}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Manejo de Imágenes de Mapas Históricos de Gran Tamaño}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Eliminación de Texto con Agrupamiento K-Means}{5}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Generación de \textit {Heatmaps} de Calles}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Creación del \textit {dataset}}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Arquitectura del Modelo}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Proceso de Entrenamiento}{6}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Resultados}{6}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Generación del \textit {Heatmap}}{6}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Segmentación de Imágenes}{8}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Metodología}{8}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Algoritmo de Flood Fill Modificado}{8}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Clasificación de Componentes}{8}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}Hiperparámetros}{8}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Salidas}{9}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Vectorización de Polígonos}{10}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Vectorización del Raster}{11}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Simplificación de Polígonos}{11}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Corrección de Orientación}{12}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Identificación de Polígonos Atípicos (\textit {Outliers})}{12}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Métricas utilizadas}{12}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Detección de \textit {Outliers}}{12}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Matching de Outliers}{13}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Normalización y Preprocesamiento}{13}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Comparación Topológica}{13}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Cálculo de Centroides}{13}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Obtención de Coordenadas Geográficas}{14}{subsection.8.4}%
+\contentsline {section}{\numberline {9}Georreferenciación}{14}{section.9}%
+\contentsline {section}{\numberline {10}Conclusiones}{14}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Limitaciones y Trabajo Futuro}{14}{subsection.10.1}%
