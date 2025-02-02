@@ -1,0 +1,33 @@
+\BOOKMARK [1][-]{section.1}{Introducci\363n}{}% 1
+\BOOKMARK [1][-]{section.2}{Preprocesamiento de Im\341genes}{}% 2
+\BOOKMARK [1][-]{section.3}{Extracci\363n y Eliminaci\363n de Etiquetas \(Labels \)}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Detecci\363n de Texto con PP-OCR}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Manejo de Im\341genes de Mapas Hist\363ricos de Gran Tama\361o}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Eliminaci\363n de Texto con Agrupamiento K-Means}{section.3}% 6
+\BOOKMARK [1][-]{section.4}{Generaci\363n de Heatmaps de Calles}{}% 7
+\BOOKMARK [2][-]{subsection.4.1}{Creaci\363n del dataset}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.2}{Arquitectura del Modelo}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.3}{Proceso de Entrenamiento}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.4}{Resultados}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.5}{Generaci\363n del Heatmap}{section.4}% 12
+\BOOKMARK [1][-]{section.5}{Segmentaci\363n de Im\341genes}{}% 13
+\BOOKMARK [2][-]{subsection.5.1}{Metodolog\355a}{section.5}% 14
+\BOOKMARK [3][-]{subsubsection.5.1.1}{Algoritmo de Flood Fill Modificado}{subsection.5.1}% 15
+\BOOKMARK [3][-]{subsubsection.5.1.2}{Clasificaci\363n de Componentes}{subsection.5.1}% 16
+\BOOKMARK [2][-]{subsection.5.2}{Hiperpar\341metros}{section.5}% 17
+\BOOKMARK [2][-]{subsection.5.3}{Salidas}{section.5}% 18
+\BOOKMARK [1][-]{section.6}{Vectorizaci\363n de Pol\355gonos}{}% 19
+\BOOKMARK [2][-]{subsection.6.1}{Vectorizaci\363n del Raster}{section.6}% 20
+\BOOKMARK [2][-]{subsection.6.2}{Simplificaci\363n de Pol\355gonos}{section.6}% 21
+\BOOKMARK [2][-]{subsection.6.3}{Correcci\363n de Orientaci\363n}{section.6}% 22
+\BOOKMARK [1][-]{section.7}{Identificaci\363n de Pol\355gonos At\355picos \(Outliers\)}{}% 23
+\BOOKMARK [2][-]{subsection.7.1}{M\351tricas utilizadas}{section.7}% 24
+\BOOKMARK [2][-]{subsection.7.2}{Detecci\363n de Outliers}{section.7}% 25
+\BOOKMARK [1][-]{section.8}{Matching de Outliers}{}% 26
+\BOOKMARK [2][-]{subsection.8.1}{Normalizaci\363n y Preprocesamiento}{section.8}% 27
+\BOOKMARK [2][-]{subsection.8.2}{Comparaci\363n Topol\363gica}{section.8}% 28
+\BOOKMARK [2][-]{subsection.8.3}{C\341lculo de Centroides}{section.8}% 29
+\BOOKMARK [2][-]{subsection.8.4}{Obtenci\363n de Coordenadas Geogr\341ficas}{section.8}% 30
+\BOOKMARK [1][-]{section.9}{Georreferenciaci\363n}{}% 31
+\BOOKMARK [1][-]{section.10}{Conclusiones}{}% 32
+\BOOKMARK [2][-]{subsection.10.1}{Limitaciones y Trabajo Futuro}{section.10}% 33
