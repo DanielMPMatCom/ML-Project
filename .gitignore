@@ -4,3 +4,5 @@ new_data
 papers
 Colección de Planos
 src/run.py
+src/images_chunks
+src/label_extraction/PaddleOCR
