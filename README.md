@@ -6,6 +6,6 @@ Inicialmente, los mapas son preprocesados mediante el recorte de bordes, la conv
 
 Los bloques segmentados se convierten en polígonos, extrayendo sus vértices y aristas, y se simplifican con los algoritmos de Ramer-Douglas-Peucker (RDP) y Shapely. Para la georreferenciación, se identifican polígonos atípicos mediante DBSCAN y se comparan con bloques equivalentes en mapas actuales. Una vez encontrados los bloques correspondientes, se calculan sus centroides y se alinean los mapas históricos con los modernos mediante superposición geoespacial.  
 
-El método propuesto permite digitalizar y estructurar mapas antiguos en un formato compatible con herramientas de análisis geográfico moderno, facilitando el estudio de la evolución urbana de La Habana y su comparación con el entorno actual. Dame este texto en ingles, y proponme un nombre cool para el paper
+El método propuesto permite digitalizar y estructurar mapas antiguos en un formato compatible con herramientas de análisis geográfico moderno, facilitando el estudio de la evolución urbana de La Habana y su comparación con el entorno actual. 
 
 [References](https://docs.google.com/spreadsheets/d/1QAY1Rq8ya9ovtaUcuRYeE54Nv9QQ88MFi4rdeW3I08Y/edit?usp=sharing)
