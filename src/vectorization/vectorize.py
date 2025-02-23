@@ -8,6 +8,7 @@ from osgeo import gdal
 from pathlib import Path
 from shapely.affinity import scale
 from shapely.geometry import shape, mapping, Polygon, MultiPolygon
+import sys
 
 # region Main Pipeline
 
@@ -102,8 +103,18 @@ def vectorize_image(input_raster, output_vector) -> None:
     """
     Uses GDAL to vectorize the binarized image and generate a Shapefile.
     """
+    # Get the directory of the 'osgeo' package
+    osgeo_dir = os.path.dirname(gdal.__file__)
+    # Construct the path to the gdal_polygonize.py script located in osgeo_utils
+    gdal_polygonize_path = os.path.abspath(os.path.join(osgeo_dir, "..", "osgeo_utils", "gdal_polygonize.py"))
+    
+    # Print the computed path for debugging (optional)
+    # print("Using gdal_polygonize script at:", gdal_polygonize_path)
+    
+    # Run the script with the current Python interpreter
     subprocess.run(
-        ["gdal_polygonize.py", input_raster, "-f", "ESRI Shapefile", output_vector]
+        [sys.executable, gdal_polygonize_path, input_raster, "-f", "ESRI Shapefile", output_vector],
+        check=True
     )
 
 

@@ -102,7 +102,7 @@ def generate_heatmap(
     height, width, _ = img_array.shape
 
     # Define window size and step size for sliding window
-    WINDOW_SIZE = height // 30
+    WINDOW_SIZE = height // 150
     if WINDOW_SIZE < 2:
         WINDOW_SIZE = 2
 
@@ -170,7 +170,7 @@ def generate_heatmap(
     hmp_output_path = os.path.join(hmp_output_dir, f"{base_name}.hmp")
     with open(hmp_output_path, 'w') as f:
         for row in heatmap_normalized.flatten():
-            f.write(f"{row} ")
+            f.write(f"{row:.3f} ")
     print(f"Heatmap .hmp file saved to: {hmp_output_path}")
 
     return heatmap_normalized

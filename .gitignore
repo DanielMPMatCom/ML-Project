@@ -11,4 +11,10 @@ __pycache__
 src/segmentation/model.pth
 report/assets
 papers
-Colección de Planos
+src/segmentation/processed_data
+src/segmentation/heatmaps
+*.json
+*.exe
+src/images_chunks
+src/vectorization/vectorized_temp
+src/vectorization/vectorized_data

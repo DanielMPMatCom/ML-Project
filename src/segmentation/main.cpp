@@ -384,7 +384,10 @@ void processImages(const std::string& inputDir, const std::string& outputDir, co
     }
 }
 
-void processImage(const std::string& imagePath, const std::string& heatmapPath, const std::string& outputFolder, const Config& config) {
+
+
+void processImage(const std::string& imagePath, const std::string& heatmapPath,
+                  const std::string& outputFolder, const Config& config) {
     // Load image data
     int width, height, channels;
     unsigned char* imgData = stbi_load(imagePath.c_str(), &width, &height, &channels, 3);
@@ -392,9 +395,9 @@ void processImage(const std::string& imagePath, const std::string& heatmapPath, 
         std::cerr << "Failed to load image: " << imagePath << "\n";
         return;
     }
-
     std::cout << "Processing image: " << imagePath
-              << " (Width: " << width << ", Height: " << height << ", Channels: " << channels << ")\n";
+              << " (Width: " << width << ", Height: " << height
+              << ", Channels: " << channels << ")\n";
 
     // Open and read the heatmap file
     std::ifstream heatmapFile(heatmapPath, std::ios::binary);
@@ -403,7 +406,6 @@ void processImage(const std::string& imagePath, const std::string& heatmapPath, 
         stbi_image_free(imgData);
         return;
     }
-
     std::vector<float> heatmap(width * height);
     heatmapFile.read(reinterpret_cast<char*>(heatmap.data()), width * height * sizeof(float));
     if (!heatmapFile) {
@@ -413,6 +415,18 @@ void processImage(const std::string& imagePath, const std::string& heatmapPath, 
     }
     heatmapFile.close();
 
+    // ---------------------------------------------------------------------
+    // Compute the 80th percentile of the heatmap values (probability threshold)
+    std::vector<float> sortedHeatmap = heatmap;
+    std::sort(sortedHeatmap.begin(), sortedHeatmap.end());
+    size_t index80_prob = static_cast<size_t>(0.8 * sortedHeatmap.size());
+    if (index80_prob >= sortedHeatmap.size())
+        index80_prob = sortedHeatmap.size() - 1;
+    float probabilityThreshold80 = sortedHeatmap[index80_prob];
+    std::cout << "Probability 80th percentile threshold: " << probabilityThreshold80 << "\n";
+    // ---------------------------------------------------------------------
+
+    // Prepare image vectors for segmentation and building blocks
     std::vector<Color> image(width * height);
     std::vector<Color> buildingBlocksImage(width * height, {255, 255, 255});
     for (int j = 0; j < width * height; ++j) {
@@ -432,13 +446,20 @@ void processImage(const std::string& imagePath, const std::string& heatmapPath, 
         return;
     }
 
-    std::ofstream componentInfoFile(outputFolder + "/components_info.json");
-    if (!componentInfoFile.is_open()) {
-        std::cerr << "Failed to create components_info.json\n";
-        return;
-    }
-    componentInfoFile << "[\n";
+    // Structure to hold component details
+    struct ComponentData {
+        int id;
+        int xMin;
+        int xMax;
+        int yMin;
+        int yMax;
+        int size;
+        float avgProbability;
+        std::vector<bool> mask; // Mask of the component within its bounding box
+    };
+    std::vector<ComponentData> components;
 
+    // Prepare for flood fill
     std::vector<bool> visited(width * height, false);
     std::vector<bool> bigMask(width * height, false);
     std::random_device rd;
@@ -446,8 +467,9 @@ void processImage(const std::string& imagePath, const std::string& heatmapPath, 
     std::uniform_int_distribution<> distrib(0, 255);
 
     auto start = std::chrono::high_resolution_clock::now();
-
     int componentCount = 0;
+
+    // Loop over every pixel to extract connected components
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             if (!visited[y * width + x]) {
@@ -455,18 +477,21 @@ void processImage(const std::string& imagePath, const std::string& heatmapPath, 
                                   static_cast<unsigned char>(distrib(gen)),
                                   static_cast<unsigned char>(distrib(gen))};
 
+                // Reset global component metrics (assumed globals updated by floodFillIterative)
                 currentComponentXmin = width;
                 currentComponentXmax = 0;
                 currentComponentYmin = height;
                 currentComponentYmax = 0;
                 currentComponentSize = 0;
 
-                floodFillIterative(image, x, y, width, height, visited, image[y * width + x],
-                                   config.k, config.use8Way, config.adj, config.euclidif, newColor, bigMask);
+                floodFillIterative(image, x, y, width, height, visited,
+                                   image[y * width + x], config.k, config.use8Way,
+                                   config.adj, config.euclidif, newColor, bigMask);
 
-                int componentWidth = currentComponentXmax - currentComponentXmin + 1;
-                int componentHeight = currentComponentYmax - currentComponentYmin + 1;
-                if (currentComponentSize < config.minComponentSize || currentComponentSize < (componentWidth * componentHeight) / 3) {
+                int compWidth = currentComponentXmax - currentComponentXmin + 1;
+                int compHeight = currentComponentYmax - currentComponentYmin + 1;
+                if (currentComponentSize < config.minComponentSize ||
+                    currentComponentSize < (compWidth * compHeight) / 3) {
                     for (int cx = currentComponentXmin; cx <= currentComponentXmax; cx++) {
                         for (int cy = currentComponentYmin; cy <= currentComponentYmax; cy++) {
                             bigMask[cy * width + cx] = false;
@@ -475,65 +500,117 @@ void processImage(const std::string& imagePath, const std::string& heatmapPath, 
                     continue;
                 }
 
+                // Extract the component mask and compute its average heatmap probability
                 float totalProbability = 0.0f;
                 int pixelCount = 0;
-                std::vector<bool> mask(componentWidth * componentHeight, false);
-                for (int cx = currentComponentXmin; cx <= currentComponentXmax; cx++) {
-                    for (int cy = currentComponentYmin; cy <= currentComponentYmax; cy++) {
+                std::vector<bool> mask(compWidth * compHeight, false);
+                for (int cy = currentComponentYmin; cy <= currentComponentYmax; cy++) {
+                    for (int cx = currentComponentXmin; cx <= currentComponentXmax; cx++) {
                         if (bigMask[cy * width + cx]) {
-                            mask[(cy - currentComponentYmin) * componentWidth + cx - currentComponentXmin] = true;
+                            int localIndex = (cy - currentComponentYmin) * compWidth + (cx - currentComponentXmin);
+                            mask[localIndex] = true;
                             totalProbability += heatmap[cy * width + cx];
                             ++pixelCount;
                         }
                     }
                 }
+                float avgProbability = (pixelCount > 0) ? (totalProbability / pixelCount) : 0.0f;
 
-                float heatmapThreshold = config.buildingBlockTreshold;
-                float avgProbability = totalProbability / pixelCount;
+                // Save component details
+                ComponentData compData;
+                compData.id = componentCount + 1;
+                compData.xMin = currentComponentXmin;
+                compData.xMax = currentComponentXmax;
+                compData.yMin = currentComponentYmin;
+                compData.yMax = currentComponentYmax;
+                compData.size = currentComponentSize;
+                compData.avgProbability = avgProbability;
+                compData.mask = mask;
+                components.push_back(compData);
 
+                // Clear used area in bigMask
                 for (int cx = currentComponentXmin; cx <= currentComponentXmax; cx++) {
                     for (int cy = currentComponentYmin; cy <= currentComponentYmax; cy++) {
-                        if (bigMask[cy * width + cx]) {
-                            bigMask[cy * width + cx] = false;
-                            if(avgProbability >= heatmapThreshold && currentComponentSize < width*height/4)
-                                buildingBlocksImage[cy * width + cx] = {0,0,0};
-                        }
+                        bigMask[cy * width + cx] = false;
                     }
                 }
-
-                std::ostringstream targetPath;
-                if (avgProbability >= config.buildingBlockTreshold) {
-                    targetPath << buildingBlocksFolder << "/component_" << std::setw(5) << std::setfill('0') << (componentCount + 1) << ".jpg";
-                } else {
-                    targetPath << nonBuildingBlocksFolder << "/component_" << std::setw(5) << std::setfill('0') << (componentCount + 1) << ".jpg";
-                }
-                saveMask(mask, componentWidth, componentHeight, targetPath.str());
-
-                if (componentCount > 0) componentInfoFile << ",\n";
-                componentInfoFile << "  {\n";
-                componentInfoFile << "    \"component\": " << componentCount + 1 << ",\n";
-                componentInfoFile << "    \"topLeftCorner\": {\n";
-                componentInfoFile << "      \"x\": " << currentComponentXmin << ",\n";
-                componentInfoFile << "      \"y\": " << currentComponentYmin << "\n";
-                componentInfoFile << "    },\n";
-                componentInfoFile << "    \"width\": " << componentWidth << ",\n";
-                componentInfoFile << "    \"height\": " << componentHeight << ",\n";
-                componentInfoFile << "    \"buildingBlockProbability\": " << avgProbability << "\n";
-                componentInfoFile << "  }";
-                ++componentCount;
+                componentCount++;
             }
         }
     }
 
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
-    std::cout << "Finished processing: " << imagePath << " (Components: " << componentCount << ", Time: " << elapsed.count() << "s)\n";
+    // ---------------------------------------------------------------------
+    // Compute the 80th percentile of component sizes (size threshold)
+    std::vector<int> sizes;
+    for (const auto& comp : components)
+        sizes.push_back(comp.size);
+    std::sort(sizes.begin(), sizes.end());
+    int sizeThreshold80 = 0;
+    if (!sizes.empty()) {
+        int index80_size = static_cast<int>(0.9 * sizes.size());
+        if (index80_size >= sizes.size())
+            index80_size = sizes.size() - 1;
+        sizeThreshold80 = sizes[index80_size];
+    }
+    std::cout << "Component size 80th percentile threshold: " << sizeThreshold80 << "\n";
+    // ---------------------------------------------------------------------
 
+    // Open the JSON file to write component info
+    std::ofstream componentInfoFile(outputFolder + "/components_info.json");
+    if (!componentInfoFile.is_open()) {
+        std::cerr << "Failed to create components_info.json\n";
+        return;
+    }
+    componentInfoFile << "[\n";
+
+    // Process each component: classify and save its mask
+    for (size_t i = 0; i < components.size(); ++i) {
+        const auto& comp = components[i];
+        int compWidth = comp.xMax - comp.xMin + 1;
+        int compHeight = comp.yMax - comp.yMin + 1;
+        // Use the 80th percentile probability threshold and size threshold for classification.
+        bool isBuildingBlock = (comp.avgProbability >= probabilityThreshold80) && (comp.size <= sizeThreshold80);
+
+        if (isBuildingBlock) {
+            for (int cy = comp.yMin; cy <= comp.yMax; cy++) {
+                for (int cx = comp.xMin; cx <= comp.xMax; cx++) {
+                    int localIndex = (cy - comp.yMin) * compWidth + (cx - comp.xMin);
+                    if (comp.mask[localIndex])
+                        buildingBlocksImage[cy * width + cx] = {0, 0, 0};
+                }
+            }
+        }
+
+        std::ostringstream targetPath;
+        if (isBuildingBlock)
+            targetPath << buildingBlocksFolder << "/component_" << std::setw(5) << std::setfill('0')
+                       << comp.id << ".jpg";
+        else
+            targetPath << nonBuildingBlocksFolder << "/component_" << std::setw(5) << std::setfill('0')
+                       << comp.id << ".jpg";
+        saveMask(comp.mask, compWidth, compHeight, targetPath.str());
+
+        if (i > 0)
+            componentInfoFile << ",\n";
+        componentInfoFile << "  {\n";
+        componentInfoFile << "    \"component\": " << comp.id << ",\n";
+        componentInfoFile << "    \"topLeftCorner\": { \"x\": " << comp.xMin
+                          << ", \"y\": " << comp.yMin << " },\n";
+        componentInfoFile << "    \"width\": " << compWidth << ",\n";
+        componentInfoFile << "    \"height\": " << compHeight << ",\n";
+        componentInfoFile << "    \"buildingBlockProbability\": " << comp.avgProbability << "\n";
+        componentInfoFile << "  }";
+    }
     componentInfoFile << "\n]";
     componentInfoFile.close();
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "Finished processing: " << imagePath << " (Components: " << componentCount
+              << ", Time: " << elapsed.count() << "s)\n";
     std::cout << "Component information written to components_info.json\n";
 
-    // Save segmentation image
+    // Save segmentation images
     std::ostringstream segPath;
     segPath << outputFolder << "/segmentation.jpg";
     saveSegmentation(image, width, height, segPath.str());
@@ -542,9 +619,10 @@ void processImage(const std::string& imagePath, const std::string& heatmapPath, 
     saveSegmentation(buildingBlocksImage, width, height, buildingBlocksImagePath.str());
 }
 
+
 int main() {
     try {
-        Config config = readConfig("config.txt");
+        Config config = readConfig("segmentation/config.txt");
         std::cout << "Configuration: k=" << config.k
                   << ", use8Way=" << config.use8Way
                   << ", euclidif=" << config.euclidif
@@ -552,7 +630,7 @@ int main() {
                   << ", minComponentSize=" << config.minComponentSize
                   << ", buildingBlockTreshold=" << config.buildingBlockTreshold<< "\n";
 
-        processImage("to_process/mapa.jpg", "to_process/mapa.hmp", "processed/mapa_data", config);
+        processImage("preprocessing/preprocessed_data/ohcah_cpcu_000013433.jpg", "segmentation/heatmaps/data_ohcah_cpcu_000013433.hmp", "segmentation/processed_data/ohcah_cpcu_000013433/", config);
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
         return 1;

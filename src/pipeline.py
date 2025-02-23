@@ -31,24 +31,25 @@ def process_image(image_name):
     p2.start()
     p2.join() 
 
+    print(col('SEGMENTATING','blue'))
     segmentate_image(f'./label_extraction/labelless_data/{image_name}.png',
                       f'./segmentation/heatmaps/{image_name}.hmp',
-                      f'segmentation/processed_data/{image_name}_data/',
+                      f'segmentation/processed_data/{image_name}/',
                       k=25,
                       use8Way=1,
                       euclidif=1,
                       adj=1,
-                      minComponentSize=300,
-                      buildingBlockTreshold=0.5
+                      minComponentSize=400,
+                      buildingBlockTreshold=0.000009
                       )
-    
-    vectorization_pipeline( input_dir=f'segmentation/processed_data/{image_name}_data/building_blocks/',
+    print(col('VECTORIZING','blue'))
+    vectorization_pipeline( input_dir=f'segmentation/processed_data/building_blocks/',
                              vectorize_dir=f'vectorization/vectorized_temp/',
-                             components_info_path=f'segmentation/processed_data/{image_name}_data/components_info.json',
-                             simplify_method="rdp",
+                             components_info_path=f'segmentation/processed_data/components_info.json',
+                             simplify_method="shapely",
                              simplify_tolerance=2,
                              output_directory=f'vectorization/vectorized_data/',
-                             output_file_name=f'{image_name}_polygons.json',
+                             output_file_name=f'{image_name}_polygons',
                              verbose=True
                             )
     
@@ -57,9 +58,9 @@ def process_image(image_name):
     clustering_polygons(json_path=f'vectorization/vectorized_data/{image_name}_polygons.json',
                          output_path=f"georeferencing/outliers_detection/detected_outliers/{image_name}_outliers.json")
     
-    extract_control_points(outliers_path, control_points_path)
+    # extract_control_points(outliers_path, control_points_path)
     
-    geodigitalize_map(vectorized_path, control_points_path, labels_path, digitalized_path)
+    # geodigitalize_map(vectorized_path, control_points_path, labels_path, digitalized_path)
 
 if __name__ == '__main__':
-    process_image("tiny_map")
+    process_image("ohcah_cpcu_000013433")
