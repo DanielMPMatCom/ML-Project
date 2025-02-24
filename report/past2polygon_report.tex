@@ -375,6 +375,108 @@ Además del enfoque basado en la ventana deslizante, se experimentó con técnic
     \label{fig:heatmap1}
 \end{figure}
 
+\subsection{Evaluación}
+
+La evaluaci\'on de esta parte se llev\'o a cabo 
+mediante un proceso comparativo que involucr\'o la 
+generaci\'on de un conjunto de datos de referencia 
+(\textit{ground truth}, Figura \ref{fig:gt}) a partir de anotaciones 
+manuales y la evaluaci\'on de tres modelos entrenados 
+con diferentes estrategias. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/GT.png}
+    \caption{Segmentaci\'on anotada manualmente.}
+    \label{fig:gt}
+\end{figure}
+
+Se evaluaron los siguinete tres modelos para la generaci\'on del \textit{heatmap}:
+\begin{enumerate}
+    \item \textbf{Modelo Manual:} Entrenado con datos etiquetados manualmente, en el que se definieron dos clases: \textit{intersecciones+calles} y \textit{no intersecciones ni calles}.
+    \item \textbf{Modelo con Intersecciones y Recortes Aleatorios:} Se emple\'o un conjunto de datos que conten\'ia instancias de intersecciones junto con recortes aleatorios, con el fin de incrementar la diversidad del entrenamiento.
+    \item \textbf{Modelo Sint\'etico:} Entrenado con datos generados totalmente de forma sint\'etica, que simulaban las caracter\'isticas de intersecciones y calles.
+\end{enumerate}
+
+Cada uno de estos modelos fue evaluado en seis im\'agenes seleccionadas, y, adicionalmente, se prob\'o la versi\'on \textit{labelless} (sin etiquetas) para analizar el comportamiento en ausencia de anotaciones. La comparaci\'on se efectu\'o mediante tres m\'etricas de evaluaci\'on no binarias, las cuales se describen a continuaci\'on:
+
+\begin{itemize}
+    \item \textbf{AUC (\textit{Area Under the ROC Curve}):} \cite{auc} Mide la capacidad del modelo para discriminar entre las dos clases. Un valor de AUC cercano a 1 indica una excelente discriminaci\'on, mientras que valores cercanos a 0.5 reflejan un desempe\~no aleatorio.
+    \item \textbf{Precisi\'on Promedio:} \cite{precission} Calcula la media de la precisi\'on obtenida en diferentes niveles de \textit{recall}, ofreciendo una medida global del equilibrio entre la exactitud y la capacidad de recuperar instancias relevantes.
+    \item \textbf{\textit{Brier Score}:} \cite{brier} Eval\'ua la exactitud de las probabilidades pronosticadas. Se define como el promedio del error cuadr\'atico entre la probabilidad predicha y la etiqueta real, donde valores menores indican una mejor calibraci\'on del modelo.
+\end{itemize}
+
+Las Figuras~\ref{fig:auc1}, \ref{fig:prec1} y \ref{fig:brier1} 
+presentan la comparaci\'on de estas m\'etricas 
+entre los distintos modelos, considerando tanto 
+la versi\'on con extracci\'on de texto como la 
+sin ella. Adicionalmente, las Figuras~\ref{fig:auc2}, 
+\ref{fig:prec2} y \ref{fig:brier2} muestran la 
+distribuci\'on de cada m\'etrica por modelo, 
+permitiendo evaluar la variabilidad y consistencia del 
+desempe\~no.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/auc.png}
+    \caption{Comparación del \textit{AUC} entre los distintos modelos, sin y con extracción de texto.}
+    \label{fig:auc1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/prec.png}
+    \caption{Comparación del \textit{promedio de la precisión} entre los distintos modelos, sin y con extracción de texto.}
+    \label{fig:prec1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/brier.png}
+    \caption{Comparación del \textit{Brier Score} entre los distintos modelos, sin y con extracción de texto.}
+    \label{fig:brier1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/aucbox.png}
+    \caption{Distribución del \textit{AUC} por modelo.}
+    \label{fig:auc2}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/precbox.png}
+    \caption{Distribución del \textit{promedio de la precisión} por modelo.}
+    \label{fig:prec2}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/bierbox.png}
+    \caption{Distribución del \textit{Brier Score} por modelo.}
+    \label{fig:brier2}
+\end{figure}
+
+
+Los resultados indicaron que el modelo 
+entrenado con datos etiquetados 
+manualmente alcanz\'o un desempeño superior, 
+reflejado en un AUC mayor, un \textit{Brier Score} 
+menor y una precisi\'on promedio m\'as alta, en 
+comparaci\'on con el modelo sint\'etico y el modelo 
+basado en intersecciones con recortes aleatorios. 
+La versi\'on labelless, aunque mostr\'o ciertos 
+desaf\'ios en la generaci\'on del \textit{heatmap}, 
+proporcion\'o resultados comparables en t\'erminos de 
+consistencia espacial. La matriz de confusión de dicho modelo se muestra en la Figura \ref{fig:conf_matr}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/conf_matr.png}
+    \caption{Matriz de Confusión de la CNN entrenada con datos etiquetados manualmente.}
+    \label{fig:conf_matr}
+\end{figure}
+
+Las tablas de los resultados de las métricas aplicadas pueden ser consultadas en los Anexos.
+
+
 \rule{\linewidth}{0.5pt}
 \section{Segmentación de Imágenes}
 
@@ -456,6 +558,43 @@ Estos resultados constituyen la entrada para las siguientes etapas del proyecto,
     \caption{Componentes clasificadas como bloques de edificios (arriba), Resto de componentes (abajo).}
     \label{fig:blocksvsnoblocks}
 \end{figure}
+
+\subsection{Evaluación}
+
+Como la etapa de segmentaci\'on produce un mapa binario que distingue las \'areas de inter\'es (por ejemplo, manzanas o bloques) del fondo, se emplearon m\'etricas de clasificaci\'on 
+binaria para evaluar su calidad. 
+En concreto, se utilizaron:
+
+\begin{itemize}
+    \item \textbf{Dice Score}: \cite{dice} Mide la superposici\'on entre el mapa predicho y el mapa de referencia, con valores cercanos a 1 indicando una mayor similitud.
+    \item \textbf{IoU (Intersection over Union)}: \cite{iou} Calcula la proporci\'on de la intersecci\'on entre la regi\'on segmentada y la regi\'on real frente a su uni\'on total. Valores m\'as altos reflejan mayor precisi\'on en la delimitaci\'on de la regi\'on.
+    \item \textbf{Precisi\'on}: Mide cu\'antos de los p\'ixeles clasificados como positivos (manzanas) son realmente positivos, ofreciendo una perspectiva sobre la exactitud de la detecci\'on.
+\end{itemize}
+
+En esta fase se compararon dos configuraciones: una en la que se manten\'ian las etiquetas o texto dentro de la imagen (\textit{Normal}), y otra en la que se hab\'ian eliminado dichos elementos (\textit{Labeless}). Los resultados, ilustrados en las Figuras~\ref{fig:dice}, \ref{fig:iou} y \ref{fig:precision}, muestran que la versi\'on \textit{Labeless} presenta valores superiores de \textit{Dice}, \textit{IoU} y \textit{Precisi\'on}, lo cual indica una mejor segmentaci\'on. Esto sugiere que la eliminaci\'on de etiquetas textuales contribuy\'o a reducir el ruido en la imagen y, en consecuencia, a mejorar la detecci\'on de las \'areas de inter\'es.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/dice.png}
+    \caption{Comparaci\'on del \textit{Dice Score} entre im\'agenes con y sin texto.}
+    \label{fig:dice}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/iou.png}
+    \caption{Comparaci\'on del \textit{IoU} entre im\'agenes con y sin texto.}
+    \label{fig:iou}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{assets/precision.png}
+    \caption{Comparaci\'on de la \textit{precisi\'on} entre im\'agenes con y sin texto.}
+    \label{fig:precision}
+\end{figure}
+
+La notable diferencia de desempe\~no entre ambas configuraciones refuerza la hip\'otesis de que la presencia de etiquetas o texto en las im\'agenes puede interferir en la etapa de segmentaci\'on, generando falsos positivos o confundiendo la red. En cambio, al retirar estos elementos, el modelo se centr\'o en la morfolog\'ia de las manzanas y logr\'o una segmentaci\'on m\'as fiel a la estructura urbana real.
 
 
 \rule{\linewidth}{0.5pt}
@@ -720,9 +859,139 @@ Como trabajo futuro, se propone mejorar el modelo de clasificaci\'on de calles i
 
     \bibitem{jaccard} Leydesdorff, L. (2008). On the normalization and visualization of author co‐citation data: Salton's Cosine versus the Jaccard index. Journal of the American Society for Information Science and Technology, 59(1), 77-85.
     
+    \bibitem{auc} Marzban, C. (2004). The ROC curve and the area under it as performance measures. Weather and Forecasting, 19(6), 1106-1114.
+
+    \bibitem{brier} Rufibach, K. (2010). Use of Brier score to assess binary predictions. Journal of clinical epidemiology, 63(8), 938-939.
+
+    \bibitem{precission} Arora, M., Kanjilal, U., \& Varshney, D. (2016). Evaluation of information retrieval: precision and recall. International Journal of Indian Culture and Business Management, 12(2), 224-236.
+
+    \bibitem{dice} Bertels, J., Eelbode, T., Berman, M., Vandermeulen, D., Maes, F., Bisschops, R., \& Blaschko, M. B. (2019). Optimizing the dice score and jaccard index for medical image segmentation: Theory and practice. In Medical Image Computing and Computer Assisted Intervention–MICCAI 2019: 22nd International Conference, Shenzhen, China, October 13–17, 2019, Proceedings, Part II 22 (pp. 92-100). Springer International Publishing.
+
+    \bibitem{iou} Cheng, B., Girshick, R., Dollár, P., Berg, A. C., \& Kirillov, A. (2021). Boundary IoU: Improving object-centric image segmentation evaluation. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition (pp. 15334-15342).
 \end{thebibliography}
+
+\newpage
+
+\section{Anexos}
+
+\begin{table*}[ht]
+\centering
+\caption{ROC\_AUC (Normal)}
+\label{tab:roc_auc_normal}
+\setlength{\tabcolsep}{6pt} % Ajusta el espacio entre columnas
+\renewcommand{\arraystretch}{1.2} % Ajusta la altura de las filas
+\begin{tabular}{|l|l|l|l|}
+\hline
+model & Modelo Anotado Manualmente & Modelo Semi-Aleatorio & Modelo Sintético \\ \hline
+ohcah\_cpcu\_000013375.jpg & 0.3309 & 0.1623 & \textbf{0.5031} \\ \hline
+ohcah\_cpcu\_000013376.jpg & 0.3208 & 0.2189 & \textbf{0.5000} \\ \hline
+ohcah\_cpcu\_000013380.jpg & \textbf{0.5990} & 0.1516 & 0.4983 \\ \hline
+ohcah\_cpcu\_000013393.jpg & \textbf{0.5473} & 0.2940 & 0.5006 \\ \hline
+ohcah\_cpcu\_000013400.jpg & \textbf{0.6038} & 0.2762 & 0.5017 \\ \hline
+ohcah\_cpcu\_000013433.jpg & \textbf{0.6459} & 0.2624 & 0.5027 \\ \hline
+\end{tabular}
+\end{table*}
+
+
+
+\begin{table*}[ht]
+\centering
+\caption{ROC\_AUC (Labeless)}
+\label{tab:roc_auc_labeless}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|l|l|}
+\hline
+model & Modelo Anotado Manualmente & Modelo Semi-Aleatorio & Modelo Sintético \\ \hline
+ohcah\_cpcu\_000013375.jpg & 0.3559 & 0.1678 & \textbf{0.5031} \\ \hline
+ohcah\_cpcu\_000013376.jpg & 0.3038 & 0.2129 & \textbf{0.4999} \\ \hline
+ohcah\_cpcu\_000013380.jpg & \textbf{0.6156} & 0.1610 & 0.4983 \\ \hline
+ohcah\_cpcu\_000013393.jpg & \textbf{0.5434} & 0.2671 & 0.5006 \\ \hline
+ohcah\_cpcu\_000013400.jpg & \textbf{0.6072} & 0.2788 & 0.5017 \\ \hline
+ohcah\_cpcu\_000013433.jpg & \textbf{0.6914} & 0.2837 & 0.5027 \\ \hline
+\end{tabular}
+\end{table*}
+
+
+
+\begin{table*}[ht]
+\centering
+\caption{Average\_Precision (Normal)}
+\label{tab:avg_prec_normal}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|l|l|}
+\hline
+model & Modelo Anotado Manualmente & Modelo Semi-Aleatorio & Modelo Sintético \\ \hline
+ohcah\_cpcu\_000013375.jpg & 0.0330 & 0.0276 & \textbf{0.0490} \\ \hline
+ohcah\_cpcu\_000013376.jpg & 0.0506 & 0.0455 & \textbf{0.0755} \\ \hline
+ohcah\_cpcu\_000013380.jpg & \textbf{0.0355} & 0.0171 & 0.0307 \\ \hline
+ohcah\_cpcu\_000013393.jpg & \textbf{0.1552} & 0.0879 & 0.1333 \\ \hline
+ohcah\_cpcu\_000013400.jpg & \textbf{0.3625} & 0.1774 & 0.2608 \\ \hline
+ohcah\_cpcu\_000013433.jpg & \textbf{0.3056} & 0.1341 & 0.2052 \\ \hline
+\end{tabular}
+\end{table*}
+
+
+
+\begin{table*}[ht]
+\centering
+\caption{Average\_Precision (Labeless)}
+\label{tab:avg_prec_labeless}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|l|l|}
+\hline
+model & Modelo Anotado Manualmente & Modelo Semi-Aleatorio & Modelo Sintético \\ \hline
+ohcah\_cpcu\_000013375.jpg & 0.0341 & 0.0276 & \textbf{0.0490} \\ \hline
+ohcah\_cpcu\_000013376.jpg & 0.0494 & 0.0449 & \textbf{0.0755} \\ \hline
+ohcah\_cpcu\_000013380.jpg & \textbf{0.0372} & 0.0172 & 0.0307 \\ \hline
+ohcah\_cpcu\_000013393.jpg & \textbf{0.1537} & 0.0852 & 0.1333 \\ \hline
+ohcah\_cpcu\_000013400.jpg & \textbf{0.3622} & 0.1784 & 0.2608 \\ \hline
+ohcah\_cpcu\_000013433.jpg & \textbf{0.3557} & 0.1367 & 0.2052 \\ \hline
+\end{tabular}
+\end{table*}
+
+
+
+\begin{table*}[ht]
+\centering
+\caption{Brier\_Score (Normal)}
+\label{tab:brier_score_normal}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|l|l|}
+\hline
+model & Modelo Anotado Manualmente & Modelo Semi-Aleatorio & Modelo Sintético \\ \hline
+ohcah\_cpcu\_000013375.jpg & \textbf{0.4433} & 0.6465 & 0.9453 \\ \hline
+ohcah\_cpcu\_000013376.jpg & \textbf{0.3243} & 0.4682 & 0.9202 \\ \hline
+ohcah\_cpcu\_000013380.jpg & \textbf{0.1696} & 0.6956 & 0.9672 \\ \hline
+ohcah\_cpcu\_000013393.jpg & \textbf{0.1256} & 0.4480 & 0.8647 \\ \hline
+ohcah\_cpcu\_000013400.jpg & \textbf{0.2538} & 0.5782 & 0.7360 \\ \hline
+ohcah\_cpcu\_000013433.jpg & \textbf{0.1671} & 0.6098 & 0.7909 \\ \hline
+\end{tabular}
+\end{table*}
+
+
+
+\begin{table*}[ht]
+\centering
+\caption{Brier\_Score (Labeless)}
+\label{tab:brier_score_labeless}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|l|l|}
+\hline
+model & Modelo Anotado Manualmente & Modelo Semi-Aleatorio & Modelo Sintético \\ \hline
+ohcah\_cpcu\_000013375.jpg & \textbf{0.4713} & 0.6959 & 0.9453 \\ \hline
+ohcah\_cpcu\_000013376.jpg & \textbf{0.3713} & 0.5305 & 0.9202 \\ \hline
+ohcah\_cpcu\_000013380.jpg & \textbf{0.1764} & 0.7434 & 0.9672 \\ \hline
+ohcah\_cpcu\_000013393.jpg & \textbf{0.1269} & 0.5358 & 0.8647 \\ \hline
+ohcah\_cpcu\_000013400.jpg & \textbf{0.2544} & 0.5836 & 0.7360 \\ \hline
+ohcah\_cpcu\_000013433.jpg & \textbf{0.1595} & 0.6262 & 0.7909 \\ \hline
+\end{tabular}
+\end{table*}
     
     
 
 \end{document}
-
