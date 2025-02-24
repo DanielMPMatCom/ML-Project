@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2024.3.14)  2 FEB 2025 02:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2024.3.14)  23 FEB 2025 19:26
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -611,7 +611,7 @@ Underfull \hbox (badness 1817) in paragraph at lines 7--7
  []
 
 
-Underfull \hbox (badness 7944) in paragraph at lines 16--16
+Underfull \hbox (badness 7944) in paragraph at lines 17--17
  [][] [][][]\OT1/cmr/m/n/10 Algoritmo de Flood Fill 
  []
 
@@ -619,7 +619,7 @@ Underfull \hbox (badness 7944) in paragraph at lines 16--16
 
 
 ]
-Underfull \hbox (badness 7273) in paragraph at lines 31--31
+Underfull \hbox (badness 7273) in paragraph at lines 33--33
  [][] [][][]\OT1/cmr/m/n/10 Obtenci^^Son de Co-or-de-nadas Ge- 
  []
 
@@ -642,18 +642,18 @@ Underfull \hbox (badness 1205) in paragraph at lines 149--150
 []\OT1/cmr/bx/n/10 Selecci^^Son de datos ^^Sutiles\OT1/cmr/m/n/10 : Se iden-ti-fi-
  []
 
-<assets/map_nice.png, id=195, 769.87625pt x 634.37pt>
+<assets/map_nice.png, id=210, 769.87625pt x 634.37pt>
 File: assets/map_nice.png Graphic file (type png)
 <use assets/map_nice.png>
 Package pdftex.def Info: assets/map_nice.png  used on input line 165.
 (pdftex.def)             Requested size: 221.48395pt x 182.50095pt.
 [2]
-<assets/map_barrio.png, id=207, 731.73375pt x 642.4pt>
+<assets/map_barrio.png, id=222, 731.73375pt x 642.4pt>
 File: assets/map_barrio.png Graphic file (type png)
 <use assets/map_barrio.png>
 Package pdftex.def Info: assets/map_barrio.png  used on input line 172.
 (pdftex.def)             Requested size: 221.48395pt x 194.44667pt.
-<assets/map_blue.png, id=208, 521.95pt x 641.39626pt>
+<assets/map_blue.png, id=223, 521.95pt x 641.39626pt>
 File: assets/map_blue.png Graphic file (type png)
 <use assets/map_blue.png>
 Package pdftex.def Info: assets/map_blue.png  used on input line 179.
@@ -661,12 +661,12 @@ Package pdftex.def Info: assets/map_blue.png  used on input line 179.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-<assets/map_old.png, id=212, 925.4575pt x 636.3775pt>
+<assets/map_old.png, id=227, 925.4575pt x 636.3775pt>
 File: assets/map_old.png Graphic file (type png)
 <use assets/map_old.png>
 Package pdftex.def Info: assets/map_old.png  used on input line 193.
 (pdftex.def)             Requested size: 221.48395pt x 152.29675pt.
-<assets/map_useless.png, id=213, 816.04875pt x 626.34pt>
+<assets/map_useless.png, id=228, 816.04875pt x 626.34pt>
 File: assets/map_useless.png Graphic file (type png)
 <use assets/map_useless.png>
 Package pdftex.def Info: assets/map_useless.png  used on input line 200.
@@ -675,12 +675,12 @@ Package pdftex.def Info: assets/map_useless.png  used on input line 200.
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [3 <./assets/map_nice.png> <./assets/map_barrio.png> <./assets/map_blue.png> <./assets/map_old.png>]
-<assets/map_3D.png, id=225, 715.67375pt x 628.3475pt>
+<assets/map_3D.png, id=240, 715.67375pt x 628.3475pt>
 File: assets/map_3D.png Graphic file (type png)
 <use assets/map_3D.png>
 Package pdftex.def Info: assets/map_3D.png  used on input line 207.
 (pdftex.def)             Requested size: 221.48395pt x 194.45013pt.
-<assets/before_after.jpg, id=227, 2034.09938pt x 888.31876pt>
+<assets/before_after.jpg, id=242, 2034.09938pt x 888.31876pt>
 File: assets/before_after.jpg Graphic file (type jpg)
 <use assets/before_after.jpg>
 Package pdftex.def Info: assets/before_after.jpg  used on input line 217.
@@ -693,7 +693,7 @@ LaTeX Font Warning: Font shape `OT1/cmr/m/scit' undefined
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-<assets/tiny_map.jpg, id=228, 934.692pt x 520.344pt>
+<assets/tiny_map.jpg, id=243, 934.692pt x 520.344pt>
 File: assets/tiny_map.jpg Graphic file (type jpg)
 <use assets/tiny_map.jpg>
 Package pdftex.def Info: assets/tiny_map.jpg  used on input line 229.
@@ -703,7 +703,7 @@ Underfull \hbox (badness 2293) in paragraph at lines 235--237
 \OT1/cmr/m/n/10 PP-OCR [[]], es un sis-tema OCR ul-tra-ligero
  []
 
-<assets/tiny_map_colored_labels.jpg, id=232, 1163.0953pt x 650.43pt>
+<assets/tiny_map_colored_labels.jpg, id=247, 1163.0953pt x 650.43pt>
 File: assets/tiny_map_colored_labels.jpg Graphic file (type jpg)
 <use assets/tiny_map_colored_labels.jpg>
 Package pdftex.def Info: assets/tiny_map_colored_labels.jpg  used on input line 255.
@@ -718,7 +718,7 @@ Underfull \hbox (badness 7486) in paragraph at lines 263--263
 []\OT1/cmr/m/sc/10 Eliminaci[]on de Texto con Agru-
  []
 
-<assets/tiny_map_labelless.jpg, id=244, 1557.82pt x 867.24pt>
+<assets/tiny_map_labelless.jpg, id=259, 1557.82pt x 867.24pt>
 File: assets/tiny_map_labelless.jpg Graphic file (type jpg)
 <use assets/tiny_map_labelless.jpg>
 Package pdftex.def Info: assets/tiny_map_labelless.jpg  used on input line 275.
@@ -735,13 +735,13 @@ LaTeX Font Warning: Font shape `OT1/cmr/m/scit' undefined
 LaTeX Font Warning: Font shape `OT1/cmr/m/scit' undefined
 (Font)              using `OT1/cmr/m/it' instead on input line 285.
 
-<assets/dataset.png, id=246, 511.9125pt x 245.11575pt>
+<assets/dataset.png, id=261, 511.9125pt x 245.11575pt>
 File: assets/dataset.png Graphic file (type png)
 <use assets/dataset.png>
 Package pdftex.def Info: assets/dataset.png  used on input line 298.
 (pdftex.def)             Requested size: 221.48395pt x 106.05223pt.
 [5 <./assets/tiny_map_colored_labels.jpg> <./assets/tiny_map_labelless.jpg> <./assets/dataset.png>]
-<assets/arch2.png, id=256, 285.138pt x 280.758pt>
+<assets/arch2.png, id=271, 285.138pt x 280.758pt>
 File: assets/arch2.png Graphic file (type png)
 <use assets/arch2.png>
 Package pdftex.def Info: assets/arch2.png  used on input line 312.
@@ -765,12 +765,12 @@ Underfull \hbox (badness 3601) in paragraph at lines 324--325
 []\OT1/cmr/bx/n/10 Clasificador: \OT1/cmr/m/n/10 Dos ca-pas com-ple-ta-mente
  []
 
-<assets/loss.png, id=259, 867.24pt x 433.62pt>
+<assets/loss.png, id=274, 867.24pt x 433.62pt>
 File: assets/loss.png Graphic file (type png)
 <use assets/loss.png>
 Package pdftex.def Info: assets/loss.png  used on input line 344.
 (pdftex.def)             Requested size: 221.48395pt x 110.74036pt.
-<assets/acc.png, id=260, 867.24pt x 433.62pt>
+<assets/acc.png, id=275, 867.24pt x 433.62pt>
 File: assets/acc.png Graphic file (type png)
 <use assets/acc.png>
 Package pdftex.def Info: assets/acc.png  used on input line 351.
@@ -784,7 +784,7 @@ Underfull \hbox (badness 5622) in paragraph at lines 361--362
 []\OT1/cmr/m/n/10 Adem^^Sas del en-foque basado en la ven-tana
  []
 
-<assets/heatmap2.png, id=271, 954.56625pt x 641.39626pt>
+<assets/heatmap2.png, id=286, 954.56625pt x 641.39626pt>
 File: assets/heatmap2.png Graphic file (type png)
 <use assets/heatmap2.png>
 Package pdftex.def Info: assets/heatmap2.png  used on input line 366.
@@ -792,7 +792,7 @@ Package pdftex.def Info: assets/heatmap2.png  used on input line 366.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-<assets/heatmap1.png, id=272, 657.2053pt x 402.00188pt>
+<assets/heatmap1.png, id=287, 657.2053pt x 402.00188pt>
 File: assets/heatmap1.png Graphic file (type png)
 <use assets/heatmap1.png>
 Package pdftex.def Info: assets/heatmap1.png  used on input line 373.
@@ -801,248 +801,348 @@ Package pdftex.def Info: assets/heatmap1.png  used on input line 373.
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [7 <./assets/arch2.png> <./assets/heatmap2.png>]
-Overfull \hbox (17.83073pt too wide) detected at line 403
+<assets/GT.png, id=297, 12772.71875pt x 8021.97pt>
+File: assets/GT.png Graphic file (type png)
+<use assets/GT.png>
+Package pdftex.def Info: assets/GT.png  used on input line 389.
+(pdftex.def)             Requested size: 221.48395pt x 139.05235pt.
+<assets/auc.png, id=307, 847.7271pt x 422.0568pt>
+File: assets/auc.png Graphic file (type png)
+<use assets/auc.png>
+Package pdftex.def Info: assets/auc.png  used on input line 422.
+(pdftex.def)             Requested size: 221.48395pt x 110.2667pt.
+<assets/prec.png, id=308, 847.7271pt x 422.0568pt>
+File: assets/prec.png Graphic file (type png)
+<use assets/prec.png>
+Package pdftex.def Info: assets/prec.png  used on input line 428.
+(pdftex.def)             Requested size: 221.48395pt x 110.2667pt.
+<assets/brier.png, id=309, 847.7271pt x 422.0568pt>
+File: assets/brier.png Graphic file (type png)
+<use assets/brier.png>
+Package pdftex.def Info: assets/brier.png  used on input line 434.
+(pdftex.def)             Requested size: 221.48395pt x 110.2667pt.
+<assets/aucbox.png, id=310, 566.5968pt x 422.0568pt>
+File: assets/aucbox.png Graphic file (type png)
+<use assets/aucbox.png>
+Package pdftex.def Info: assets/aucbox.png  used on input line 440.
+(pdftex.def)             Requested size: 221.48395pt x 164.98145pt.
+ [8 <./assets/heatmap1.png> <./assets/GT.png (PNG copy)> <./assets/auc.png> <./assets/prec.png>]
+<assets/precbox.png, id=333, 566.5968pt x 422.0568pt>
+File: assets/precbox.png Graphic file (type png)
+<use assets/precbox.png>
+Package pdftex.def Info: assets/precbox.png  used on input line 446.
+(pdftex.def)             Requested size: 221.48395pt x 164.98145pt.
+<assets/bierbox.png, id=334, 566.5968pt x 422.0568pt>
+File: assets/bierbox.png Graphic file (type png)
+<use assets/bierbox.png>
+Package pdftex.def Info: assets/bierbox.png  used on input line 452.
+(pdftex.def)             Requested size: 221.48395pt x 164.98145pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+<assets/conf_matr.png, id=336, 585.18625pt x 490.83376pt>
+File: assets/conf_matr.png Graphic file (type png)
+<use assets/conf_matr.png>
+Package pdftex.def Info: assets/conf_matr.png  used on input line 472.
+(pdftex.def)             Requested size: 221.48395pt x 185.7698pt.
+ [9 <./assets/brier.png> <./assets/aucbox.png> <./assets/precbox.png> <./assets/bierbox.png> <./assets/conf_matr.png>]
+Overfull \hbox (17.83073pt too wide) detected at line 505
 []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 c[]; c[]\OT1/cmr/m/n/10 ) = []
  []
 
-[8 <./assets/heatmap1.png>]
-Underfull \hbox (badness 3271) in paragraph at lines 423--424
+
+Underfull \hbox (badness 3271) in paragraph at lines 525--526
 []\OT1/cmr/m/it/10 minComponentSize\OT1/cmr/m/n/10 : Tama~no m^^S^^Pnimo (en
  []
 
 
-Underfull \hbox (badness 1152) in paragraph at lines 431--432
+Underfull \hbox (badness 1152) in paragraph at lines 533--534
 \OT1/cmr/m/n/10 com-po-nente iden-ti-fi-cada, sep-a-radas en dos
  []
 
-
-Underfull \hbox (badness 1019) in paragraph at lines 432--433
+[10]
+Underfull \hbox (badness 1019) in paragraph at lines 534--535
 []\OT1/cmr/m/n/10 Imagen de seg-mentaci^^Son: Una im-a-gen en
  []
 
-<assets/segmentation.jpg, id=297, 271.2534pt x 616.704pt>
+<assets/segmentation.jpg, id=361, 271.2534pt x 616.704pt>
 File: assets/segmentation.jpg Graphic file (type jpg)
 <use assets/segmentation.jpg>
-Package pdftex.def Info: assets/segmentation.jpg  used on input line 441.
+Package pdftex.def Info: assets/segmentation.jpg  used on input line 543.
 (pdftex.def)             Requested size: 221.48395pt x 503.55504pt.
 
-Underfull \hbox (badness 1527) in paragraph at lines 442--442
-[]\OT1/cmr/m/n/10 Figure 17: |Mapa pre-proce-sado (ar-riba), Seg-
- []
-
-
-Underfull \vbox (badness 8170) has occurred while \output is active []
-
-<assets/segmentation2.jpg, id=298, 313.17pt x 616.704pt>
-File: assets/segmentation2.jpg Graphic file (type jpg)
-<use assets/segmentation2.jpg>
-Package pdftex.def Info: assets/segmentation2.jpg  used on input line 448.
-(pdftex.def)             Requested size: 221.48395pt x 436.16907pt.
-
-Underfull \hbox (badness 1527) in paragraph at lines 449--449
-[]\OT1/cmr/m/n/10 Figure 18: |Mapa pre-proce-sado (ar-riba), Seg-
+Underfull \hbox (badness 1527) in paragraph at lines 544--544
+[]\OT1/cmr/m/n/10 Figure 25: |Mapa pre-proce-sado (ar-riba), Seg-
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [9 <./assets/segmentation.jpg>]
-<assets/blocksvsnoblocks.jpg, id=304, 616.704pt x 531.4254pt>
+<assets/segmentation2.jpg, id=362, 313.17pt x 616.704pt>
+File: assets/segmentation2.jpg Graphic file (type jpg)
+<use assets/segmentation2.jpg>
+Package pdftex.def Info: assets/segmentation2.jpg  used on input line 550.
+(pdftex.def)             Requested size: 221.48395pt x 436.16907pt.
+
+Underfull \hbox (badness 1527) in paragraph at lines 551--551
+[]\OT1/cmr/m/n/10 Figure 26: |Mapa pre-proce-sado (ar-riba), Seg-
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [11 <./assets/segmentation.jpg>]
+<assets/blocksvsnoblocks.jpg, id=368, 616.704pt x 531.4254pt>
 File: assets/blocksvsnoblocks.jpg Graphic file (type jpg)
 <use assets/blocksvsnoblocks.jpg>
-Package pdftex.def Info: assets/blocksvsnoblocks.jpg  used on input line 455.
+Package pdftex.def Info: assets/blocksvsnoblocks.jpg  used on input line 557.
 (pdftex.def)             Requested size: 221.48395pt x 190.85889pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
+<assets/dice.png, id=374, 570.933pt x 426.393pt>
+File: assets/dice.png Graphic file (type png)
+<use assets/dice.png>
+Package pdftex.def Info: assets/dice.png  used on input line 578.
+(pdftex.def)             Requested size: 221.48395pt x 165.41426pt.
 
-Underfull \hbox (badness 1184) in paragraph at lines 465--466
+Underfull \vbox (badness 1661) has occurred while \output is active []
+
+ [12 <./assets/segmentation2.jpg> <./assets/blocksvsnoblocks.jpg>]
+<assets/iou.png, id=386, 570.933pt x 426.393pt>
+File: assets/iou.png Graphic file (type png)
+<use assets/iou.png>
+Package pdftex.def Info: assets/iou.png  used on input line 585.
+(pdftex.def)             Requested size: 221.48395pt x 165.41426pt.
+<assets/precision.png, id=387, 570.933pt x 426.393pt>
+File: assets/precision.png Graphic file (type png)
+<use assets/precision.png>
+Package pdftex.def Info: assets/precision.png  used on input line 592.
+(pdftex.def)             Requested size: 221.48395pt x 165.41426pt.
+
+Underfull \hbox (badness 1184) in paragraph at lines 604--605
 \OT1/cmr/m/n/10 el proce-samiento de los datos, per-mi-tiendo la
  []
 
 
-Underfull \hbox (badness 2012) in paragraph at lines 465--466
+Underfull \hbox (badness 2012) in paragraph at lines 604--605
 \OT1/cmr/m/n/10 con-versi^^Son de es-truc-turas raster a rep-re-senta-
  []
 
 
-Underfull \hbox (badness 2582) in paragraph at lines 465--466
+Underfull \hbox (badness 2582) in paragraph at lines 604--605
 \OT1/cmr/m/n/10 ciones geom^^Setricas vec-to-ri-ales. Este pro-ceso
  []
 
 
-Underfull \hbox (badness 1735) in paragraph at lines 465--466
+Underfull \hbox (badness 1735) in paragraph at lines 604--605
 \OT1/cmr/m/n/10 ten^^S^^Pan los pol^^S^^Pgonos de in-ter^^Ses, junto con la
  []
 
 
-Underfull \hbox (badness 2384) in paragraph at lines 465--466
+Underfull \hbox (badness 2384) in paragraph at lines 604--605
 \OT1/cmr/m/n/10 in-for-maci^^Son com-ple-men-taria al-ma-ce-nada en el
  []
 
 
-Underfull \hbox (badness 1571) in paragraph at lines 465--466
+Underfull \hbox (badness 1571) in paragraph at lines 604--605
 \OT1/cmr/m/n/10 de es-tas fuentes de datos per-miti^^So garan-ti-zar
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 465--466
+Underfull \hbox (badness 10000) in paragraph at lines 604--605
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 467--468
+Underfull \hbox (badness 10000) in paragraph at lines 606--607
 
  []
 
-<assets/polygons.jpg, id=305, 175.857pt x 69.861pt>
+<assets/polygons.jpg, id=388, 175.857pt x 69.861pt>
 File: assets/polygons.jpg Graphic file (type jpg)
 <use assets/polygons.jpg>
-Package pdftex.def Info: assets/polygons.jpg  used on input line 471.
+Package pdftex.def Info: assets/polygons.jpg  used on input line 610.
 (pdftex.def)             Requested size: 221.48395pt x 87.99225pt.
-<assets/qgis.png, id=307, 1301.86375pt x 709.65125pt>
+<assets/qgis.png, id=390, 1301.86375pt x 709.65125pt>
 File: assets/qgis.png Graphic file (type png)
 <use assets/qgis.png>
-Package pdftex.def Info: assets/qgis.png  used on input line 481.
+Package pdftex.def Info: assets/qgis.png  used on input line 620.
 (pdftex.def)             Requested size: 221.48395pt x 120.72574pt.
-[10 <./assets/segmentation2.jpg> <./assets/blocksvsnoblocks.jpg> <./assets/polygons.jpg>]
-<assets/vectorized.png, id=316, 616.3025pt x 556.0775pt>
+[13 <./assets/dice.png> <./assets/iou.png> <./assets/precision.png> <./assets/polygons.jpg> <./assets/qgis.png>]
+<assets/vectorized.png, id=403, 616.3025pt x 556.0775pt>
 File: assets/vectorized.png Graphic file (type png)
 <use assets/vectorized.png>
-Package pdftex.def Info: assets/vectorized.png  used on input line 492.
+Package pdftex.def Info: assets/vectorized.png  used on input line 631.
 (pdftex.def)             Requested size: 221.48395pt x 199.83986pt.
-<assets/rdp.png, id=319, 433.62pt x 126.4725pt>
+<assets/rdp.png, id=406, 433.62pt x 126.4725pt>
 File: assets/rdp.png Graphic file (type png)
 <use assets/rdp.png>
-Package pdftex.def Info: assets/rdp.png  used on input line 503.
+Package pdftex.def Info: assets/rdp.png  used on input line 642.
 (pdftex.def)             Requested size: 221.48395pt x 64.60046pt.
-
-Underfull \vbox (badness 2165) has occurred while \output is active []
-
-<assets/simplified.png, id=320, 635.37375pt x 565.11125pt>
+<assets/simplified.png, id=407, 635.37375pt x 565.11125pt>
 File: assets/simplified.png Graphic file (type png)
 <use assets/simplified.png>
-Package pdftex.def Info: assets/simplified.png  used on input line 510.
+Package pdftex.def Info: assets/simplified.png  used on input line 649.
 (pdftex.def)             Requested size: 221.48395pt x 196.98996pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 518--519
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 657--658
 []\OT1/cmr/bx/n/10 rdp: \OT1/cmr/m/n/10 Im-ple-menta ^^Sunicamente Douglas-
  []
 
 
-Underfull \hbox (badness 3471) in paragraph at lines 518--519
+Underfull \hbox (badness 3471) in paragraph at lines 657--658
 \OT1/cmr/m/n/10 Peucker, lo que lo hace es-pec^^S^^Pfico para
  []
 
-<assets/rdpvsshapely2.jpg, id=322, 280.32pt x 113.442pt>
+<assets/rdpvsshapely2.jpg, id=409, 280.32pt x 113.442pt>
 File: assets/rdpvsshapely2.jpg Graphic file (type jpg)
 <use assets/rdpvsshapely2.jpg>
-Package pdftex.def Info: assets/rdpvsshapely2.jpg  used on input line 527.
+Package pdftex.def Info: assets/rdpvsshapely2.jpg  used on input line 666.
 (pdftex.def)             Requested size: 221.48395pt x 89.63376pt.
-[11 <./assets/qgis.png> <./assets/vectorized.png> <./assets/rdp.png> <./assets/simplified.png> <./assets/rdpvsshapely2.jpg>]
-<assets/flip.png, id=339, 685.56125pt x 571.13374pt>
+<assets/flip.png, id=410, 685.56125pt x 571.13374pt>
 File: assets/flip.png Graphic file (type png)
 <use assets/flip.png>
-Package pdftex.def Info: assets/flip.png  used on input line 538.
+Package pdftex.def Info: assets/flip.png  used on input line 677.
 (pdftex.def)             Requested size: 221.48395pt x 184.5182pt.
-
+[14 <./assets/vectorized.png> <./assets/rdp.png> <./assets/simplified.png> <./assets/rdpvsshapely2.jpg>]
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/scit' undefined
-(Font)              using `OT1/cmr/m/it' instead on input line 544.
+(Font)              using `OT1/cmr/m/it' instead on input line 683.
 
 
-Underfull \hbox (badness 2707) in paragraph at lines 544--544
+Underfull \hbox (badness 2707) in paragraph at lines 683--683
 []\OT1/cmr/m/sc/10 Identificaci[]on de Pol[]^^Pgonos At[]^^Ppicos
  []
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/scit' undefined
-(Font)              using `OT1/cmr/m/it' instead on input line 566.
+(Font)              using `OT1/cmr/m/it' instead on input line 705.
 
 
-Overfull \hbox (16.83977pt too wide) detected at line 582
+Overfull \hbox (16.83977pt too wide) detected at line 721
 []  \OMS/cmsy/m/n/10 ^^@ []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^O; []\OT1/cmr/m/n/10 )
  []
 
-[12 <./assets/flip.png>]
-<assets/outliers.jpg, id=349, 1284.8pt x 1027.84pt>
+<assets/outliers.jpg, id=425, 1284.8pt x 1027.84pt>
 File: assets/outliers.jpg Graphic file (type jpg)
 <use assets/outliers.jpg>
-Package pdftex.def Info: assets/outliers.jpg  used on input line 592.
+Package pdftex.def Info: assets/outliers.jpg  used on input line 731.
 (pdftex.def)             Requested size: 181.18439pt x 144.94742pt.
-<assets/polygons_matching1.jpg, id=351, 616.704pt x 308.8338pt>
+[15 <./assets/flip.png>]
+<assets/polygons_matching1.jpg, id=436, 616.704pt x 308.8338pt>
 File: assets/polygons_matching1.jpg Graphic file (type jpg)
 <use assets/polygons_matching1.jpg>
-Package pdftex.def Info: assets/polygons_matching1.jpg  used on input line 617.
+Package pdftex.def Info: assets/polygons_matching1.jpg  used on input line 756.
 (pdftex.def)             Requested size: 181.18439pt x 90.7329pt.
-<assets/polygons_matching.jpg, id=352, 616.704pt x 529.4982pt>
+<assets/polygons_matching.jpg, id=437, 616.704pt x 529.4982pt>
 File: assets/polygons_matching.jpg Graphic file (type jpg)
 <use assets/polygons_matching.jpg>
-Package pdftex.def Info: assets/polygons_matching.jpg  used on input line 624.
+Package pdftex.def Info: assets/polygons_matching.jpg  used on input line 763.
 (pdftex.def)             Requested size: 181.18439pt x 155.56233pt.
 
-Underfull \hbox (badness 2846) in paragraph at lines 631--632
+Underfull \hbox (badness 2846) in paragraph at lines 770--771
 \OT1/cmr/m/n/10 Una vez es-table-cida la cor-re-spon-den-cia en-tre
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 647--647
+Underfull \hbox (badness 10000) in paragraph at lines 786--786
 []\OT1/cmr/m/sc/10 Obtenci[]on de Co-or-de-nadas Ge-
  []
 
-[13 <./assets/outliers.jpg> <./assets/polygons_matching1.jpg> <./assets/polygons_matching.jpg>]
-<assets/mapa_superpuesto.png, id=366, 1059.96pt x 640.3925pt>
+[16 <./assets/outliers.jpg> <./assets/polygons_matching1.jpg> <./assets/polygons_matching.jpg>]
+<assets/mapa_superpuesto.png, id=449, 1059.96pt x 640.3925pt>
 File: assets/mapa_superpuesto.png Graphic file (type png)
 <use assets/mapa_superpuesto.png>
-Package pdftex.def Info: assets/mapa_superpuesto.png  used on input line 658.
+Package pdftex.def Info: assets/mapa_superpuesto.png  used on input line 797.
 (pdftex.def)             Requested size: 226.48395pt x 136.83157pt.
 
-Overfull \hbox (5.0pt too wide) in paragraph at lines 658--659
+Overfull \hbox (5.0pt too wide) in paragraph at lines 797--798
  [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 674--675
+Underfull \hbox (badness 10000) in paragraph at lines 813--814
 []\OT1/cmr/bx/n/10 Vectorizaci^^Son y Sim-pli-fi-caci^^Son de
  []
 
 
-Underfull \hbox (badness 1546) in paragraph at lines 674--675
+Underfull \hbox (badness 1546) in paragraph at lines 813--814
 \OT1/cmr/m/n/10 Peucker y Shapely, op-ti-mizando la rep-re-
  []
 
-[14 <./assets/mapa_superpuesto.png>]
-Underfull \hbox (badness 3557) in paragraph at lines 705--706
+[17 <./assets/mapa_superpuesto.png>]
+Underfull \hbox (badness 3557) in paragraph at lines 844--845
 []\OT1/cmr/m/n/10 Koonce, B., & Koonce, B. (2021). Mo-
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 727.
-[15]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 727.
+
+Underfull \hbox (badness 1117) in paragraph at lines 866--867
+[]\OT1/cmr/m/n/10 Arora, M., Kan-ji-lal, U., & Varsh-ney, D.
+ []
+
+[18]
+Overfull \hbox (18.9276pt too wide) in paragraph at lines 883--893
+ [][] 
+ []
+
+
+Overfull \hbox (18.9276pt too wide) in paragraph at lines 903--913
+ [][] 
+ []
+
+
+Overfull \hbox (18.9276pt too wide) in paragraph at lines 923--933
+ [][] 
+ []
+
+
+Overfull \hbox (18.9276pt too wide) in paragraph at lines 943--953
+ [][] 
+ []
+
+
+Overfull \hbox (18.9276pt too wide) in paragraph at lines 963--973
+ [][] 
+ []
+
+
+Overfull \hbox (18.9276pt too wide) in paragraph at lines 983--993
+ [][] 
+ []
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 997.
+[19
+
+] [20] [21]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 997.
  (build/past2polygon_report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 727.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 727.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 997.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 997.
 Package rerunfilecheck Info: File `past2polygon_report.out' has not changed.
-(rerunfilecheck)             Checksum: E5DE9D06D7ED727C463F2DD521648836;2479.
+(rerunfilecheck)             Checksum: 5E3EDE652CA15599BB609DFD66356687;2648.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 727.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 997.
  ) 
 Here is how much of TeX's memory you used:
- 10558 strings out of 483121
- 169001 string characters out of 5964354
- 555789 words of memory out of 5000000
- 25241 multiletter control sequences out of 15000+600000
+ 10687 strings out of 483121
+ 171041 string characters out of 5964354
+ 562331 words of memory out of 5000000
+ 25326 multiletter control sequences out of 15000+600000
  538369 words of font info for 46 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
  48i,12n,46p,838b,475s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/danielhp/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on build/past2polygon_report.pdf (15 pages, 15731144 bytes).
+Output written on build/past2polygon_report.pdf (21 pages, 19805721 bytes).
 PDF statistics:
- 456 PDF objects out of 1000 (max. 8388607)
- 370 compressed objects within 4 object streams
- 97 named destinations out of 1000 (max. 500000)
- 415 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 565 PDF objects out of 1000 (max. 8388607)
+ 451 compressed objects within 5 object streams
+ 131 named destinations out of 1000 (max. 500000)
+ 494 words of extra memory for PDF output out of 10000 (max. 10000000)
 
