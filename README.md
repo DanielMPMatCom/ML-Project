@@ -1,5 +1,7 @@
 # Past2Polygon: Un enfoque basado en Machine Learning para la digitalización de mapas históricos.
 
+![mapa](mapa_superpuesto.png)
+
 En este trabajo se presenta un procedimiento para la digitalización y modernización de mapas antiguos, con un enfoque particular en la ciudad de La Habana. El objetivo es transformar mapas históricos proporcionados por la Oficina del Historiador de la Ciudad de La Habana en representaciones digitales modernas, permitiendo el análisis de los cambios urbanos a lo largo del tiempo.  
 
 Inicialmente, los mapas son preprocesados mediante el recorte de bordes, la conversión a escala de grises y la aplicación de filtros para la eliminación de ruido. Posteriormente, se eliminan las etiquetas textuales y numéricas utilizando PaddleOCR, reemplazando las áreas detectadas con el color predominante mediante K-means. Luego, se emplea una red neuronal convolucional para generar un mapa de calor que diferencia calles y bloques de edificios. Las imágenes se segmentan con un algoritmo de *Flood Fill* y, utilizando la información del mapa de calor, se identifican y extraen los bloques urbanos.  
